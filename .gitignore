@@ -1,0 +1,31 @@
+# .gitignore file cho .NET và React
+# Thư mục của Visual Studio (không cần thiết cho Git)
+.vs/
+.vscode/
+
+# Các file và thư mục build
+bin/
+obj/
+
+# Các file tạm thời
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Các file của hệ thống
+*.dbmdl
+*.bak
+*.log
+
+# Các file môi trường
+.env
+
+# Các file và thư mục tạm của React (build)
+node_modules/
+build/
+
+# Thư mục khác không cần thiết
+npm-debug.log
+yarn-debug.log
+yarn-error.log
