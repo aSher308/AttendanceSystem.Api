@@ -13,8 +13,6 @@ namespace AttendanceSystem.Models
         [StringLength(255, ErrorMessage = "Description cannot be longer than 255 characters.")]
         public string Description { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
         public ICollection<UserRole> UserRoles { get; set; }
     }
 }
