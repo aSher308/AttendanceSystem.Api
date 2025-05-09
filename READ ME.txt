@@ -1,0 +1,19 @@
+- Dự án cơ sở: Web chấm công online
+- Thành viên:
+ + Nguyễn Tuấn Vũ - 2280603747
+ + Nguyễn Trần Đăng Khoa - 2280601534
+ + Đặng Hoài Nam - 2280611346
+- Mô tả các chức năng:
+    1. Chấm công GPS & nhận diện khuôn mặt
+    2. Quản lý ca làm & lịch làm
+    3. Duyệt đơn nghỉ phép & đơn chấm công
+    4. Thống kê & báo cáo
+    5. Nhật ký hoạt động
+    7. Cảnh báo đi trễ / không chấm công
+    8. Lịch sử chỉnh sửa chấm công
+    9. Phân loại ngày nghỉ
+    10. Export báo cáo ra Excel/PDF
+    11. Quản lý vị trí làm việc
+    12. Gửi email tự động
+    13. Gửi đơn tăng ca + duyệt
+    14. Chấm công bằng QR code
