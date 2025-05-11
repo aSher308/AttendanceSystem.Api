@@ -25,9 +25,13 @@ namespace AttendanceSystem.Models
         public int LeaveBalance { get; set; } = 12;
 
         public bool IsActive { get; set; }
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsEmailConfirmed { get; set; }
+        public string? EmailConfirmationToken { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
 
 
         // Foreign key và navigation property cho Department
