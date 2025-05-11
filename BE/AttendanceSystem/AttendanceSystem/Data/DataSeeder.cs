@@ -26,7 +26,7 @@ namespace AttendanceSystem.Data
                 var adminUser = new User
                 {
                     FullName = "Administrator",
-                    Email = "admin@example.com",
+                    Email = "admin@gmail.com",
                     PhoneNumber = "0123456789",
                     PasswordHash = PasswordHasher.Hash("Admin@123"), // 👈 đổi mật khẩu sau
                     LeaveBalance = 30,

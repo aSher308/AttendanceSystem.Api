@@ -91,8 +91,11 @@ namespace AttendanceSystem.Services
             user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
             await _context.SaveChangesAsync();
 
-            var link = $"{resetUrlBase}?token={user.PasswordResetToken}";
-            await SendEmailAsync(user.Email, "Đặt lại mật khẩu", $"Click vào đây để đặt lại mật khẩu: {link}");
+            await SendEmailAsync(
+                user.Email,
+                "Mã đặt lại mật khẩu",
+                $"Mã đặt lại mật khẩu của bạn là:\n\n{user.PasswordResetToken}\n\nMã này sẽ hết hạn sau 1 giờ."
+            );
             return true;
         }
 
