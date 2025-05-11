@@ -22,12 +22,21 @@ namespace AttendanceSystem.Models
         public string PhoneNumber { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "Leave balance must be a positive number.")]
-        public int LeaveBalance { get; set; }
+        public int LeaveBalance { get; set; } = 12;
 
         public bool IsActive { get; set; }
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsEmailConfirmed { get; set; }
+        public string? EmailConfirmationToken { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
+
+
+        // Foreign key và navigation property cho Department
+        public int? DepartmentId { get; set; }
+        public Department Department { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Attendance> Attendances { get; set; }
