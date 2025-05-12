@@ -7,6 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Gọi API từ FE
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder => builder
+            .WithOrigins("http://localhost:5173") // địa chỉ React frontend
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 // ✅ 1. Cấu hình DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -46,6 +58,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 var app = builder.Build();
+
+// Use CORS
+app.UseCors("AllowFrontend");
 
 // ✅ 6. Seed database: role + admin
 using (var scope = app.Services.CreateScope())

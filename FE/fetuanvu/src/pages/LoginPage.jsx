@@ -1,13 +1,12 @@
-// src/pages/LoginPage.jsx
-import React from "react";
+// LoginPage.jsx
 import LoginForm from "../components/LoginForm";
 
-const LoginPage = () => {
+function LoginPage() {
   return (
-    <div className="login-page">
+    <div>
       <LoginForm />
     </div>
   );
-};
+}
 
 export default LoginPage;

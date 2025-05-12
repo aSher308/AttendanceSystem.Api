@@ -1,43 +1,53 @@
-// src/components/LoginForm.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
-const LoginForm = () => {
-  const [username, setUsername] = useState("");
+const API_URL = import.meta.env.VITE_API_URL;
+
+function LoginForm() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Xử lý đăng nhập ở đây
+    try {
+      const response = await axios.post(
+        `${API_URL}/login`,
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
+      setMessage(response.data.message);
+      // Bạn có thể lưu user info vào localStorage tại đây nếu cần
+    } catch (error) {
+      setMessage(error.response?.data || "Đăng nhập thất bại");
+    }
   };
 
   return (
-    <div className="login-container">
-      <h2>Đăng Nhập</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label htmlFor="username">Tài Khoản:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="password">Mật Khẩu:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Đăng Nhập</button>
-      </form>
-    </div>
+    <form onSubmit={handleLogin}>
+      <h2>Đăng nhập</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <br />
+      <input
+        type="password"
+        placeholder="Mật khẩu"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <br />
+      <button type="submit">Đăng nhập</button>
+      <p>{message}</p>
+    </form>
   );
-};
+}
 
 export default LoginForm;
