@@ -14,6 +14,9 @@ namespace AttendanceSystem.Services.Interfaces
         // Đăng nhập
         Task<User?> LoginAsync(string email, string password);
 
+        // Hàm riêng để lấy user chưa kiểm tra mật khẩu
+        Task<User?> FindByEmailAsync(string email);
+
         // Đăng xuất
         Task LogoutAsync();
 

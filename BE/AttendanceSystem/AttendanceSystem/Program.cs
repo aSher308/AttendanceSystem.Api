@@ -12,7 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ✅ 2. Đăng ký repository và service
-/*builder.Services.AddScoped<IUserRepository, UserRepository>();*/
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
 // ✅ 3. Thêm session

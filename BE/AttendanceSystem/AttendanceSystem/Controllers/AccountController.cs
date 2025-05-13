@@ -1,4 +1,5 @@
 ﻿using AttendanceSystem.DTOs;
+using AttendanceSystem.Helpers;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,10 +35,21 @@ namespace AttendanceSystem.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _accountService.LoginAsync(request.Email, request.Password);
-            if (user == null) return Unauthorized("Sai email, mật khẩu hoặc email chưa được xác nhận.");
+            var user = await _accountService.FindByEmailAsync(request.Email); // Hàm riêng để lấy user chưa kiểm tra mật khẩu
 
-            HttpContext.Session.SetInt32("UserId", user.Id); // Cookie-based session
+            if (user == null)
+                return Unauthorized("Email không tồn tại.");
+
+            if (!user.IsEmailConfirmed)
+                return Unauthorized("Email chưa được xác nhận.");
+
+            if (!user.IsActive)
+                return Unauthorized("Tài khoản của bạn đã bị khoá. Vui lòng liên hệ quản trị viên.");
+
+            if (!PasswordHasher.Verify(request.Password, user.PasswordHash))
+                return Unauthorized("Sai mật khẩu.");
+
+            HttpContext.Session.SetInt32("UserId", user.Id);
             return Ok(new { message = "Đăng nhập thành công", user.Id, user.FullName });
         }
 

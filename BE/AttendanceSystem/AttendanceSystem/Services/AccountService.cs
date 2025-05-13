@@ -62,9 +62,18 @@ namespace AttendanceSystem.Services
         public async Task<User?> LoginAsync(string email, string password)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null || !user.IsEmailConfirmed) return null;
-            if (!PasswordHasher.Verify(password, user.PasswordHash)) return null;
+            if (user == null || !user.IsEmailConfirmed || !user.IsActive)
+                return null;
+
+            if (!PasswordHasher.Verify(password, user.PasswordHash))
+                return null;
+
             return user;
+        }
+
+        public async Task<User?> FindByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public Task LogoutAsync()
