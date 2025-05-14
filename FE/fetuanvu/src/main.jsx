@@ -3,11 +3,12 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
 function Main() {
+  console.log("Main Component Rendered");
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/RegisterPage" element={<RegisterPage />} />
       </Routes>
     </Router>
   );

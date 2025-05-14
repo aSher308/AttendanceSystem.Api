@@ -2,10 +2,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import LoginPage from "./pages/LoginPage";
+import Main from "./main";
 import "./style/style.css"; // Đảm bảo bạn đã tạo file CSS ở đây
 
 ReactDOM.render(
   <React.StrictMode>
+    <Main />
     <LoginPage />
   </React.StrictMode>,
   document.getElementById("root")

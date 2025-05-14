@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         builder => builder
-            .WithOrigins("http://localhost:5173") // địa chỉ React frontend
+            .WithOrigins("http://localhost:1212") // địa chỉ React frontend
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -69,6 +69,7 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedRolesAsync(context);
     await DataSeeder.SeedAdminUserAsync(context);
 }
+builder.Services.AddSession();
 
 // ✅ 7. Middleware pipeline
 app.UseHttpsRedirection();
