@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using AttendanceSystem.Models;
 using AttendanceSystem.Helpers;
+using System.IdentityModel.Tokens.Jwt;
 namespace AttendanceSystem.Data
 {
     public static class DataSeeder

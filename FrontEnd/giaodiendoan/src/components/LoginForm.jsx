@@ -19,9 +19,11 @@ function LoginForm() {
           withCredentials: true,
         }
       );
+      console.log(response.data);
       setMessage(response.data.message);
       // Bạn có thể lưu user info vào localStorage tại đây nếu cần
     } catch (error) {
+      console.log("sai");
       setMessage(error.response?.data || "Đăng nhập thất bại");
     }
   };
