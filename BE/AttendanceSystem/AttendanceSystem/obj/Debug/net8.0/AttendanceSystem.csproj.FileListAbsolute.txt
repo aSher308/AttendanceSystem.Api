@@ -1,11 +1,8 @@
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.exe
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\appsettings.Development.json
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\appsettings.json
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.staticwebassets.runtime.json
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.staticwebassets.endpoints.json
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.exe
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.deps.json
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.runtimeconfig.json
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.dll
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.pdb
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\Azure.Core.dll
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\Azure.Identity.dll
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\EPPlus.dll
@@ -140,6 +137,9 @@ D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\At
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\AttendanceSystem.dll
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\refint\AttendanceSystem.dll
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\AttendanceSystem.pdb
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.deps.json
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.runtimeconfig.json
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.dll
+D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.pdb
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\AttendanceSystem.genruntimeconfig.cache
 D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\obj\Debug\net8.0\ref\AttendanceSystem.dll
-D:\AttendanceSystem.Api\BE\AttendanceSystem\AttendanceSystem\bin\Debug\net8.0\AttendanceSystem.staticwebassets.runtime.json

@@ -14,7 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // ✅ 2. Đăng ký repository và service
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<IShiftService, ShiftService>();
 // ✅ 3. Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -47,12 +47,13 @@ builder.Services.AddSwaggerGen(options =>
 });
 var app = builder.Build();
 
-// ✅ 6. Seed database: role + admin
+// ✅ 6. Seed database: role + admin + shift
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DataSeeder.SeedRolesAsync(context);
-    await DataSeeder.SeedAdminUserAsync(context);
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DataSeeder.SeedRolesAsync(dbContext);
+    await DataSeeder.SeedAdminUserAsync(dbContext);
+    await DataSeeder.SeedShiftsAsync(dbContext); 
 }
 
 // ✅ 7. Middleware pipeline

@@ -1,7 +1,7 @@
 ﻿using AttendanceSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using AttendanceSystem.Models;
 using AttendanceSystem.Helpers;
+
 namespace AttendanceSystem.Data
 {
     public static class DataSeeder
@@ -20,7 +20,6 @@ namespace AttendanceSystem.Data
 
         public static async Task SeedAdminUserAsync(AppDbContext context)
         {
-            // Kiểm tra nếu chưa có user admin
             if (!await context.Users.AnyAsync(u => u.Email == "admin@example.com"))
             {
                 var adminUser = new User
@@ -28,7 +27,7 @@ namespace AttendanceSystem.Data
                     FullName = "Administrator",
                     Email = "admin@gmail.com",
                     PhoneNumber = "0123456789",
-                    PasswordHash = PasswordHasher.Hash("Admin@123"), // 👈 đổi mật khẩu sau
+                    PasswordHash = PasswordHasher.Hash("Admin@123"),
                     LeaveBalance = 30,
                     IsEmailConfirmed = true,
                     IsActive = true,
@@ -49,6 +48,41 @@ namespace AttendanceSystem.Data
                     });
                     await context.SaveChangesAsync();
                 }
+            }
+        }
+
+        public static async Task SeedShiftsAsync(AppDbContext context)
+        {
+            if (!await context.Shifts.AnyAsync())
+            {
+                context.Shifts.AddRange(
+                    new Shift
+                    {
+                        Name = "Ca sáng",
+                        StartTime = new TimeSpan(7, 0, 0),
+                        EndTime = new TimeSpan(11, 30, 0),
+                        IsActive = true,
+                        Description = "Ca làm buổi sáng"
+                    },
+                    new Shift
+                    {
+                        Name = "Ca chiều",
+                        StartTime = new TimeSpan(13, 0, 0),
+                        EndTime = new TimeSpan(17, 30, 0),
+                        IsActive = true,
+                        Description = "Ca làm buổi chiều"
+                    },
+                    new Shift
+                    {
+                        Name = "Ca tối",
+                        StartTime = new TimeSpan(18, 0, 0),
+                        EndTime = new TimeSpan(22, 0, 0),
+                        IsActive = false,
+                        Description = "Ca làm buổi tối"
+                    }
+                );
+
+                await context.SaveChangesAsync();
             }
         }
     }
