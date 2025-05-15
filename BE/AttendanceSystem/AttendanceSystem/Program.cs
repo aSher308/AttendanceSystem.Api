@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:1212") // ✅ React URL
+        policy.WithOrigins("http://localhost:5173", "https://localhost:5173") // ✅ React URL
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // ✅ bắt buộc để dùng cookie

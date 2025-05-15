@@ -9,6 +9,8 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  console.log(email, password);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -16,20 +18,27 @@ function LoginForm() {
         `${API_URL}/login`,
         { email, password },
         {
-          withCredentials: true,
+          withCredentials: true, // 🔥 Quan trọng để gửi cookie session đến server
         }
       );
-      console.log(response.data);
-      setMessage(response.data.message);
-      // Bạn có thể lưu user info vào localStorage tại đây nếu cần
+
+      setMessage(response.data.message || "Đăng nhập thành công");
+      console.log("Đăng nhập thành công:", response.data);
+
+      // 👉 Nếu muốn lưu thông tin user vào localStorage:
+      localStorage.setItem("userId", response.data.id);
+      localStorage.setItem("fullName", response.data.fullName);
+
+      // 👉 Điều hướng qua trang khác nếu cần
+      // window.location.href = "/dashboard";
     } catch (error) {
-      console.log("sai");
-      setMessage(error.response?.data || "Đăng nhập thất bại");
+      console.error("Đăng nhập thất bại:", error);
+      setMessage(error.response?.data || "Sai tài khoản hoặc mật khẩu");
     }
   };
 
   return (
-    <div class="formLog">
+    <div className="formLog">
       <form onSubmit={handleLogin}>
         <h2>Đăng nhập</h2>
         <input
