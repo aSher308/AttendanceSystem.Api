@@ -15,6 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
+builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+/*AttendanceService.ScheduleDailyAbsentJob();*/
 // ✅ 3. Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

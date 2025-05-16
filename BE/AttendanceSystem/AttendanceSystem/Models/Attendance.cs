@@ -34,17 +34,17 @@ namespace AttendanceSystem.Models
 
         // Ảnh khuôn mặt
         [StringLength(255)]
-        public string CheckInPhotoUrl { get; set; }
+        public string? CheckInPhotoUrl { get; set; }
 
         [StringLength(255)]
-        public string CheckOutPhotoUrl { get; set; }
+        public string? CheckOutPhotoUrl { get; set; }
 
         // Nhật ký chỉnh sửa
         public int? AdjustedBy { get; set; }
         public DateTime? AdjustedAt { get; set; }
 
         [StringLength(255)]
-        public string AdjustmentReason { get; set; }
+        public string? AdjustmentReason { get; set; }
 
         // Quan hệ
         public User User { get; set; }

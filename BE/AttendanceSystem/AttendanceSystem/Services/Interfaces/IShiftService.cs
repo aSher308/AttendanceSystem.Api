@@ -10,5 +10,6 @@ namespace AttendanceSystem.Services
         Task<ShiftResponse> CreateAsync(ShiftCreateRequest request);
         Task<bool> UpdateAsync(ShiftUpdateRequest request);
         Task<bool> DeleteAsync(int id);
+        Task<bool> ChangeStatusAsync(int id, bool isActive);
     }
 }

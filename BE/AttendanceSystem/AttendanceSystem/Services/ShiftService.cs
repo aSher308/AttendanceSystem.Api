@@ -92,5 +92,15 @@ namespace AttendanceSystem.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> ChangeStatusAsync(int id, bool isActive)
+        {
+            var shift = await _context.Shifts.FindAsync(id);
+            if (shift == null) return false;
+
+            shift.IsActive = isActive;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

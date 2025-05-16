@@ -5,6 +5,7 @@
         OnTime,
         Late,
         Absent,
+        LeaveEarly,
         Pending
     }
 
@@ -13,7 +14,8 @@
         GPS,
         QR,
         FaceRecognition,
-        Manual
+        Manual,
+        None
     }
 
     public enum RequestStatus
