@@ -20,12 +20,12 @@ namespace AttendanceSystem.Data
 
         public static async Task SeedAdminUserAsync(AppDbContext context)
         {
-            if (!await context.Users.AnyAsync(u => u.Email == "admin@example.com"))
+            if (!await context.Users.AnyAsync(u => u.Email == "manhcuucon@gmail.com"))
             {
                 var adminUser = new User
                 {
                     FullName = "Administrator",
-                    Email = "admin@gmail.com",
+                    Email = "manhcuucon@gmail.com",
                     PhoneNumber = "0123456789",
                     PasswordHash = PasswordHasher.Hash("Admin@123"),
                     LeaveBalance = 30,

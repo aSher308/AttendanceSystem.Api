@@ -230,7 +230,6 @@ namespace AttendanceSystem.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReviewerComment")
-                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 

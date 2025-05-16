@@ -4,6 +4,7 @@ using AttendanceSystem.Data;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using Hangfire;
 
 namespace AttendanceSystem.Services
 {
@@ -109,14 +110,14 @@ namespace AttendanceSystem.Services
             await _context.SaveChangesAsync();
         }
 
-/*        public static void ScheduleDailyAbsentJob()
+        public static void ScheduleDailyAbsentJob()
         {
             RecurringJob.AddOrUpdate<IAttendanceService>(
                 "auto-mark-absent",
                 service => service.AutoMarkAbsentAsync(DateTime.UtcNow.Date),
                 "0 23 * * *" // mỗi ngày lúc 23:00 UTC
             );
-        }*/
+        }
 
         public async Task<List<AttendanceResponse>> GetAllAsync(int? userId, DateTime? fromDate, DateTime? toDate, string? status)
         {

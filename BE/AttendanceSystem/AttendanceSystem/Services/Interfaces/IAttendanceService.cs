@@ -10,5 +10,6 @@ namespace AttendanceSystem.Services.Interfaces
         Task<AttendanceResponse?> GetByIdAsync(int id);
         Task<bool> UpdateAsync(AttendanceUpdateRequest request);
         Task<byte[]> ExportToExcelAsync(int? userId, DateTime? fromDate, DateTime? toDate);
+        Task AutoMarkAbsentAsync(DateTime date);
     }
 }

@@ -30,7 +30,7 @@ namespace AttendanceSystem.Models
         public int? ApprovedBy { get; set; }
 
         [StringLength(300, ErrorMessage = "Reviewer comment cannot be longer than 300 characters.")]
-        public string ReviewerComment { get; set; }
+        public string? ReviewerComment { get; set; }
 
         // Trường hợp người khác tạo hộ đơn nghỉ
         public int? CreatedBy { get; set; }

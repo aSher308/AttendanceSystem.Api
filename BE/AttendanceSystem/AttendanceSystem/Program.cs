@@ -1,24 +1,25 @@
 ﻿using AttendanceSystem.Data;
-/*using AttendanceSystem.Repositories;
-using AttendanceSystem.Repositories.Interfaces;*/
 using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ 1. Cấu hình DbContext
+// Cấu hình DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ✅ 2. Đăng ký repository và service
+// Đăng ký repository và service
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
 builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-/*AttendanceService.ScheduleDailyAbsentJob();*/
-// ✅ 3. Thêm session
+builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -27,7 +28,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// ✅ 4. Thêm CORS (nếu frontend React/Vue...)
+// Thêm CORS (nếu frontend React/Vue...)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -36,7 +37,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ✅ 5. Add controllers
+// Hangfire config
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
+// Add controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -50,7 +56,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 var app = builder.Build();
 
-// ✅ 6. Seed database: role + admin + shift
+// Seed database: role + admin + shift
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -59,13 +65,19 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedShiftsAsync(dbContext); 
 }
 
-// ✅ 7. Middleware pipeline
+// Middleware pipeline
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();
 app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
+
+// Enable Hangfire Dashboard
+app.UseHangfireDashboard();
+
+// Đăng ký job tự động đánh vắng mỗi ngày lúc 23h
+AttendanceService.ScheduleDailyAbsentJob();
 
 if (app.Environment.IsDevelopment())
 {
