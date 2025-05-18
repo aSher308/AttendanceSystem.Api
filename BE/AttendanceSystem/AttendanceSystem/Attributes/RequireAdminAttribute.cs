@@ -5,8 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceSystem.Attributes
 {
-    public class RequireAdminAttribute : Attribute, IAsyncAuthorizationFilter
+    public class RequireRoleAttribute : Attribute, IAsyncAuthorizationFilter
     {
+        private readonly string[] _roles;
+
+        public RequireRoleAttribute(params string[] roles)
+        {
+            _roles = roles;
+        }
+
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var httpContext = context.HttpContext;
@@ -20,14 +27,26 @@ namespace AttendanceSystem.Attributes
                 return;
             }
 
-            var isAdmin = await db.UserRoles
+            var userRoles = await db.UserRoles
                 .Include(ur => ur.Role)
-                .AnyAsync(ur => ur.UserId == userId && ur.Role.Name == "Admin");
+                .Where(ur => ur.UserId == userId)
+                .Select(ur => ur.Role.Name)
+                .ToListAsync();
 
-            if (!isAdmin)
+            if (!_roles.Any(role => userRoles.Contains(role)))
             {
                 context.Result = new ForbidResult();
             }
         }
+    }
+
+    public class RequireAdminAttribute : RequireRoleAttribute
+    {
+        public RequireAdminAttribute() : base("Admin") { }
+    }
+
+    public class RequireUserAttribute : RequireRoleAttribute
+    {
+        public RequireUserAttribute() : base("User") { }
     }
 }

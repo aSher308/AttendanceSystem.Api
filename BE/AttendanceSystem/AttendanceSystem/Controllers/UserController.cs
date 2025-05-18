@@ -18,6 +18,7 @@ namespace AttendanceSystem.Controllers
         }
 
         // Lấy danh sách người dùng có bộ lọc
+       
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string? keyword, [FromQuery] int? departmentId,
                                                 [FromQuery] bool? isActive, [FromQuery] string? role)

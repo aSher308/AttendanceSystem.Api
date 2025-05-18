@@ -301,9 +301,72 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.LeaveRequestController",
-    "Method": "GetById",
-    "RelativePath": "api/LeaveRequest/{id}",
+    "Method": "Approve",
+    "RelativePath": "api/LeaveRequest/approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AttendanceSystem.DTOs.LeaveRequestApprovalRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.OvertimeRequestController",
+    "Method": "Create",
+    "RelativePath": "api/OvertimeRequest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AttendanceSystem.DTOs.OvertimeRequestCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.OvertimeRequestController",
+    "Method": "GetAll",
+    "RelativePath": "api/OvertimeRequest",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "from",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "to",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.OvertimeRequestController",
+    "Method": "Delete",
+    "RelativePath": "api/OvertimeRequest/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -316,16 +379,16 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AttendanceSystem.Controllers.LeaveRequestController",
+    "ContainingType": "AttendanceSystem.Controllers.OvertimeRequestController",
     "Method": "Approve",
-    "RelativePath": "api/LeaveRequest/approve",
+    "RelativePath": "api/OvertimeRequest/approve",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "request",
-        "Type": "AttendanceSystem.DTOs.LeaveRequestApprovalRequest",
+        "Type": "AttendanceSystem.DTOs.OvertimeApprovalRequest",
         "IsRequired": true
       }
     ],

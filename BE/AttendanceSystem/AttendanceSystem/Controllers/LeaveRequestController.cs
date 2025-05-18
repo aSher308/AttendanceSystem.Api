@@ -1,5 +1,6 @@
 ﻿using AttendanceSystem.DTOs;
 using AttendanceSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AttendanceSystem.Controllers
@@ -45,13 +46,13 @@ namespace AttendanceSystem.Controllers
             return Ok(list);
         }
 
-/*        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var item = await _leaveRequestService.GetByIdAsync(id);
-            if (item == null) return NotFound();
-            return Ok(item);
-        }*/
+        /*        [HttpGet("{id}")]
+                public async Task<IActionResult> GetById(int id)
+                {
+                    var item = await _leaveRequestService.GetByIdAsync(id);
+                    if (item == null) return NotFound();
+                    return Ok(item);
+                }*/
         // Chấp nhận hoặc hủy đơn
         [HttpPut("approve")]
         public async Task<IActionResult> Approve([FromBody] LeaveRequestApprovalRequest request)
