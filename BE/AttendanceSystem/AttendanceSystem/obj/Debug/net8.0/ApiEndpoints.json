@@ -301,22 +301,6 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.LeaveRequestController",
-    "Method": "GetById",
-    "RelativePath": "api/LeaveRequest/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.LeaveRequestController",
     "Method": "Approve",
     "RelativePath": "api/LeaveRequest/approve",
     "HttpMethod": "PUT",
