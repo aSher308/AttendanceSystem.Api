@@ -43,29 +43,66 @@ export default function Layout() {
         {/* Sidebar Navigation */}
         <nav className="sidebar">
           <ul className="nav-menu">
+            <h5 className="nav-section-title">Menu</h5>
             <li className="nav-item">
               <Link to="home" className="nav-link">
                 Trang chủ
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/timekeeping" className="nav-link">
+              <Link to="timekeeping" className="nav-link">
                 Chấm công
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/report" className="nav-link">
-                Báo cáo
+                Nghỉ phép
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/employee" className="nav-link">
-                Nhân viên
+                Ca làm việc
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/settings" className="nav-link">
-                Cài đặt
+                Lịch làm việc
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Báo cáo cá nhân
+              </Link>
+              <h5 className="nav-section-title">Quản lý</h5>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Quản lý nhân viên
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Quản lý ca làm
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Quản lý lịch làm
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Đơn nghỉ phép
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Báo cáo tổng hợp
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/settings" className="nav-link">
+                Nhật kí hoạt động
               </Link>
             </li>
           </ul>

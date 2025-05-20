@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "../styles/style.css";
 import { API_URL } from "../config";
+import { Link } from "react-router-dom";
 
 const REGISTER_URL = `${API_URL}/Account`; // chữ thường, đúng với controller route
 
@@ -95,6 +96,9 @@ function RegisterForm() {
         required
       />
       <button type="submit">Đăng ký</button>
+      <p className="change-password-link">
+        <Link to="/">Đăng nhập</Link>
+      </p>
       <p>{message}</p>
     </form>
   );

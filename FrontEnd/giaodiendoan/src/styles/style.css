@@ -253,3 +253,137 @@ body {
 .logout-text {
   font-size: 16px;
 }
+
+.nav-section-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #999;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  margin-top: 20px;
+}
+
+/* ####################################### */
+/* Phần CSS cho TimekeepingForm */
+/* Container chính mở rộng full body */
+.timekeeping-container {
+  max-width: 900px; /* tăng giới hạn chiều ngang */
+  width: 90%; /* chiếm 90% chiều ngang màn hình */
+  margin: 2rem auto; /* canh giữa theo chiều ngang, margin trên/dưới 2rem */
+  padding: 2rem 3rem; /* padding rộng hơn để dễ nhìn */
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+  font-family: Arial, sans-serif;
+  color: #2c3e50;
+  box-sizing: border-box; /* tránh padding ảnh hưởng chiều rộng */
+}
+
+/* Tiêu đề */
+.timekeeping-container h2 {
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2.2rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Nhãn */
+.timekeeping-container label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #34495e;
+}
+
+/* Select form-control */
+.timekeeping-container select.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.timekeeping-container select.form-control:focus {
+  outline: none;
+  border-color: #2980b9;
+}
+
+/* Các nút */
+.timekeeping-container button {
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.7rem 1.6rem;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.3s ease;
+  margin-right: 1.2rem;
+  margin-bottom: 1.5rem;
+  min-width: 130px;
+}
+
+/* Màu nút */
+.btn-primary {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #1c6ea4;
+}
+
+.btn-success {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #1e8449;
+}
+
+.btn-danger {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #922b21;
+}
+
+/* Hiển thị tọa độ vị trí */
+.location-display {
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  color: #34495e;
+  font-weight: 500;
+}
+
+/* Khung bản đồ mở rộng */
+.map-wrapper {
+  width: 100%;
+  height: 400px; /* tăng chiều cao để rộng hơn */
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Thông báo */
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  padding: 1.2rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  border: 1px solid #bee5eb;
+}

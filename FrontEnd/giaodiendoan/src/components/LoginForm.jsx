@@ -66,6 +66,9 @@ function LoginForm() {
         <p className="register-link">
           <Link to="/register">Bấm vào đây để đăng ký tài khoản</Link>
         </p>
+        <p className="forgot-password-link">
+          <Link to="/forgot-password">Quên mật khẩu?</Link>
+        </p>
       </form>
     </div>
   );
