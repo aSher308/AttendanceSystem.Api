@@ -43,7 +43,7 @@ namespace AttendanceSystem.Services
                 ShiftName = ws.Shift.Name,
                 StartTime = ws.Shift.StartTime,
                 EndTime = ws.Shift.EndTime,
-                WorkDate = ws.WorkDate,
+                WorkDate = ws.WorkDate.AddHours(7),
                 Note = ws.Note,
                 Status = ws.Status
             }).ToListAsync();
@@ -75,7 +75,7 @@ namespace AttendanceSystem.Services
                 ShiftName = shift?.Name ?? "",
                 StartTime = shift?.StartTime ?? TimeSpan.Zero,
                 EndTime = shift?.EndTime ?? TimeSpan.Zero,
-                WorkDate = schedule.WorkDate,
+                WorkDate = schedule.WorkDate.AddHours(7),
                 Note = schedule.Note,
                 Status = schedule.Status
             };

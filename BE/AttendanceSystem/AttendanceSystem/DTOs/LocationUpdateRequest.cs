@@ -1,13 +1,12 @@
-﻿namespace AttendanceSystem.Models
+﻿namespace AttendanceSystem.DTOs
 {
-    public class Location
+    public class LocationUpdateRequest
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int RadiusInMeters { get; set; }
         public bool IsDefault { get; set; }
-        public ICollection<Attendance> Attendances { get; set; }
     }
 }

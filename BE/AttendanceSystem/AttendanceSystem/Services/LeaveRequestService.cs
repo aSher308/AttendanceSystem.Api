@@ -10,6 +10,7 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
 
         public LeaveRequestService(AppDbContext context, IEmailService emailService)
         {
@@ -30,7 +31,7 @@ namespace AttendanceSystem.Services
                 LeaveType = request.LeaveType,
                 Reason = request.Reason,
                 Status = RequestStatus.Pending,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = VietnamTimeHelper.Now,
                 CreatedBy = request.CreatedBy
             };
 
@@ -105,7 +106,7 @@ namespace AttendanceSystem.Services
             if (leave == null || leave.Status != RequestStatus.Pending) return false;
 
             leave.Status = request.Status;
-            leave.ReviewedAt = DateTime.UtcNow;
+            leave.ReviewedAt = VietnamTimeHelper.Now;
             leave.ReviewerComment = request.ReviewerComment;
             leave.ApprovedBy = request.ApprovedBy;
 
@@ -137,9 +138,9 @@ namespace AttendanceSystem.Services
                 : $"Đơn nghỉ của bạn đã bị từ chối. Ghi chú: {request.ReviewerComment}";
 
             await _emailService.SendEmailAsync(user.Email, "Kết quả đơn nghỉ phép", body);
-
             return true;
         }
+
 
         public async Task<bool> CheckLeaveBalanceEnoughAsync(int userId, DateTime from, DateTime to)
         {

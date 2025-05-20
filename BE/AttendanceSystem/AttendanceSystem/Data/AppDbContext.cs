@@ -65,6 +65,12 @@ namespace AttendanceSystem.Data
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DepartmentId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Attendance>()
+               .HasOne(a => a.Location)
+               .WithMany(l => l.Attendances)
+               .HasForeignKey(a => a.LocationId)
+               .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

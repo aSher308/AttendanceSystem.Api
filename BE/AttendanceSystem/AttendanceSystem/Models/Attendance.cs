@@ -20,8 +20,13 @@ namespace AttendanceSystem.Models
         [Required(ErrorMessage = "Attendance type is required.")]
         public AttendanceType AttendanceType { get; set; }
 
+        // Vẫn giữ lại LocationName để lưu lịch sử text
         [StringLength(100, ErrorMessage = "Location name cannot be longer than 100 characters.")]
         public string LocationName { get; set; }
+
+        // Thêm LocationId để liên kết
+        public int? LocationId { get; set; }
+        public Location Location { get; set; }
 
         [StringLength(500, ErrorMessage = "Device info cannot be longer than 500 characters.")]
         public string DeviceInfo { get; set; }
@@ -46,10 +51,10 @@ namespace AttendanceSystem.Models
         [StringLength(255)]
         public string? AdjustmentReason { get; set; }
 
-        // Quan hệ
+        // Navigation
         public User User { get; set; }
 
-        // Kiểm tra nếu trạng thái cần phải điều chỉnh sau khi CheckIn
+        // Logic
         public bool IsCheckedOut => CheckOut.HasValue;
         public bool IsCheckedIn => CheckIn != default(DateTime);
     }

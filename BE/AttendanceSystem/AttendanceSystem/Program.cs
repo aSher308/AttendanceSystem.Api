@@ -1,4 +1,5 @@
 ﻿using AttendanceSystem.Data;
+using AttendanceSystem.Middleware;
 using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
 using Hangfire;
@@ -18,7 +19,8 @@ builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 // Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -62,9 +64,11 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await DataSeeder.SeedRolesAsync(dbContext);
     await DataSeeder.SeedAdminUserAsync(dbContext);
-    await DataSeeder.SeedShiftsAsync(dbContext); 
+    await DataSeeder.SeedShiftsAsync(dbContext);
+    await DataSeeder.SeedLocationsAsync(dbContext);
 }
 
+app.UseErrorHandling();
 // Middleware pipeline
 app.UseHttpsRedirection();
 app.UseRouting();

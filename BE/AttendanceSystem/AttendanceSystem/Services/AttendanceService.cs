@@ -5,38 +5,73 @@ using AttendanceSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using Hangfire;
+using AttendanceSystem.Exceptions;
 
 namespace AttendanceSystem.Services
 {
     public class AttendanceService : IAttendanceService
     {
         private readonly AppDbContext _context;
-
+        private readonly INotificationService _notificationService;
         public AttendanceService(AppDbContext context)
         {
             _context = context;
         }
 
+        private static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6371000; // Radius of Earth in meters
+            double dLat = (lat2 - lat1) * Math.PI / 180;
+            double dLon = (lon2 - lon1) * Math.PI / 180;
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c;
+        }
+
+        private static DateTime GetVietnamTime()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
+        }
+
         public async Task<AttendanceResponse> CheckInAsync(AttendanceCheckInRequest request)
         {
-            var today = DateTime.UtcNow.Date;
+            var today = GetVietnamTime().Date;
+
             var existing = await _context.Attendances.FirstOrDefaultAsync(a => a.UserId == request.UserId && a.CheckIn.Date == today);
-            if (existing != null) throw new Exception("Đã check-in trong ngày hôm nay");
+            if (existing != null) throw new AppException("Đã check-in trong ngày hôm nay");
 
-            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift).FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
-            if (schedule == null) throw new Exception("Hôm nay bạn không có lịch làm việc");
+            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift)
+                                     .FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
+            if (schedule == null) throw new AppException("Hôm nay bạn không có lịch làm việc");
 
+            var location = await _context.Locations.FirstOrDefaultAsync(l => l.Name == request.LocationName);
+            if (location == null) throw new AppException("Không tìm thấy địa điểm hợp lệ để check-in");
+
+            // Kiểm tra khoảng cách với vị trí hợp lệ
+            if (request.Latitude.HasValue && request.Longitude.HasValue)
+            {
+                double distance = CalculateDistance(request.Latitude.Value, request.Longitude.Value, location.Latitude, location.Longitude);
+                if (distance > location.RadiusInMeters)
+                {
+                    throw new AppException("Bạn đang ở ngoài phạm vi cho phép để check-in (" + Math.Round(distance) + "m)");
+                }
+            }
+
+            var vietnamNow = GetVietnamTime();
             var expectedCheckIn = today.Add(schedule.Shift.StartTime);
-            var diffCheckIn = (DateTime.UtcNow - expectedCheckIn).TotalMinutes;
+            var diffCheckIn = (vietnamNow - expectedCheckIn).TotalMinutes;
             var status = diffCheckIn > 15 ? AttendanceStatus.Late : AttendanceStatus.OnTime;
 
             var attendance = new Attendance
             {
                 UserId = request.UserId,
-                CheckIn = DateTime.UtcNow,
+                CheckIn = vietnamNow,
                 Status = status,
                 AttendanceType = request.AttendanceType,
                 LocationName = request.LocationName,
+                LocationId = location.Id,
                 DeviceInfo = request.DeviceInfo,
                 CheckInLatitude = request.Latitude,
                 CheckInLongitude = request.Longitude,
@@ -52,23 +87,39 @@ namespace AttendanceSystem.Services
 
         public async Task<AttendanceResponse> CheckOutAsync(AttendanceCheckOutRequest request)
         {
-            var today = DateTime.UtcNow.Date;
+            var today = GetVietnamTime().Date;
+
             var attendance = await _context.Attendances.FirstOrDefaultAsync(a => a.UserId == request.UserId && a.CheckIn.Date == today);
-            if (attendance == null) throw new Exception("Chưa check-in trong ngày hôm nay");
-            if (attendance.CheckOut.HasValue) throw new Exception("Đã check-out trước đó");
+            if (attendance == null) throw new AppException("Chưa check-in trong ngày hôm nay");
+            if (attendance.CheckOut.HasValue) throw new AppException("Đã check-out trước đó");
 
-            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift).FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
-            if (schedule == null) throw new Exception("Hôm nay bạn không có lịch làm việc");
+            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift)
+                                    .FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
+            if (schedule == null) throw new AppException("Hôm nay bạn không có lịch làm việc");
 
+            var location = await _context.Locations.FirstOrDefaultAsync(l => l.Name == attendance.LocationName);
+            if (location == null) throw new AppException("Không tìm thấy địa điểm hợp lệ để check-out");
+
+            // Kiểm tra khoảng cách vị trí check-out
+            if (request.Latitude.HasValue && request.Longitude.HasValue)
+            {
+                double distance = CalculateDistance(request.Latitude.Value, request.Longitude.Value, location.Latitude, location.Longitude);
+                if (distance > location.RadiusInMeters)
+                {
+                    throw new AppException("Bạn đang ở ngoài phạm vi cho phép để check-out (" + Math.Round(distance) + "m)");
+                }
+            }
+
+            var vietnamNow = GetVietnamTime();
             var expectedCheckOut = today.Add(schedule.Shift.EndTime);
-            var diffCheckOut = (expectedCheckOut - DateTime.UtcNow).TotalMinutes;
+            var diffCheckOut = (expectedCheckOut - vietnamNow).TotalMinutes;
 
             if (diffCheckOut > 15)
             {
                 attendance.Status = AttendanceStatus.LeaveEarly;
             }
 
-            attendance.CheckOut = DateTime.UtcNow;
+            attendance.CheckOut = vietnamNow;
             attendance.CheckOutLatitude = request.Latitude;
             attendance.CheckOutLongitude = request.Longitude;
             attendance.CheckOutPhotoUrl = request.PhotoUrl;
@@ -79,11 +130,10 @@ namespace AttendanceSystem.Services
             var user = await _context.Users.FindAsync(request.UserId);
             return ToResponse(attendance, user);
         }
-
         public async Task AutoMarkAbsentAsync(DateTime date)
         {
             var schedules = await _context.WorkSchedules
-                .Where(ws => ws.WorkDate == date)
+                .Where(ws => ws.WorkDate == date && (ws.Status == null || ws.Status == "Working"))
                 .ToListAsync();
 
             foreach (var schedule in schedules)
@@ -107,6 +157,7 @@ namespace AttendanceSystem.Services
                     });
                 }
             }
+
             await _context.SaveChangesAsync();
         }
 
@@ -114,7 +165,7 @@ namespace AttendanceSystem.Services
         {
             RecurringJob.AddOrUpdate<IAttendanceService>(
                 "auto-mark-absent",
-                service => service.AutoMarkAbsentAsync(DateTime.UtcNow.Date),
+                service => service.AutoMarkAbsentAsync(GetVietnamTime().Date),
                 "0 23 * * *" // mỗi ngày lúc 23:00 UTC
             );
         }
@@ -155,7 +206,7 @@ namespace AttendanceSystem.Services
 
             att.AdjustmentReason = request.AdjustmentReason;
             att.AdjustedBy = request.AdjustedBy;
-            att.AdjustedAt = DateTime.UtcNow;
+            att.AdjustedAt = GetVietnamTime();
 
             await _context.SaveChangesAsync();
             return true;

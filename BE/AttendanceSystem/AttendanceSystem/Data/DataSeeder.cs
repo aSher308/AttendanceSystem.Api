@@ -85,5 +85,50 @@ namespace AttendanceSystem.Data
                 await context.SaveChangesAsync();
             }
         }
+
+        public static async Task SeedLocationsAsync(AppDbContext context)
+        {
+            if (!context.Locations.Any())
+            {
+                var locations = new List<Location>
+                {
+                    new Location
+                    {
+                        Name = "Khu E",
+                        Latitude = 10.8550348,
+                        Longitude = 106.7847038,
+                        RadiusInMeters = 100,
+                        IsDefault = true
+                    },
+                    new Location
+                    {
+                        Name = "Khu R",
+                        Latitude = 10.8408075,
+                        Longitude = 106.8088987,
+                        RadiusInMeters = 100,
+                        IsDefault = false
+                    },
+                    new Location
+                    {
+                        Name = "Khu AB",
+                        Latitude = 10.8095728,
+                        Longitude = 106.7149885,
+                        RadiusInMeters = 100,
+                        IsDefault = false
+                    },
+                    new Location
+                    {
+                        Name = "Nhà tôi",
+                        Latitude = 10.884845,
+                        Longitude = 106.784789,
+                        RadiusInMeters = 100,
+                        IsDefault = false
+                    }
+                };
+
+                context.Locations.AddRange(locations);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }

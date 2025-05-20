@@ -10,7 +10,7 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-
+        private readonly INotificationService _notificationService;
         public OvertimeRequestService(AppDbContext context, IEmailService emailService)
         {
             _context = context;
@@ -66,8 +66,11 @@ namespace AttendanceSystem.Services
                 : $"Yêu cầu tăng ca của bạn đã bị từ chối.";
 
             await _emailService.SendEmailAsync(user.Email, "Kết quả tăng ca", body);
+
+
             return true;
         }
+
 
         public async Task<bool> DeleteAsync(int id)
         {

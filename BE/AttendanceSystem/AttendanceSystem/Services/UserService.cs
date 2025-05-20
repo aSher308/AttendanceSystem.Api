@@ -65,8 +65,9 @@ namespace AttendanceSystem.Services
                 PasswordHash = PasswordHasher.Hash(request.Password),
                 LeaveBalance = 12,
                 IsActive = request.IsActive,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now,
+                IsEmailConfirmed = true,
                 DepartmentId = request.DepartmentId
             };
 
@@ -107,7 +108,7 @@ namespace AttendanceSystem.Services
             user.PhoneNumber = request.PhoneNumber;
             user.DepartmentId = request.DepartmentId;
             user.IsActive = request.IsActive;
-            user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedAt = VietnamTimeHelper.Now;
 
             await _context.SaveChangesAsync();
             return true;
@@ -246,8 +247,8 @@ namespace AttendanceSystem.Services
                     PasswordHash = PasswordHasher.Hash(password ?? "123456"),
                     LeaveBalance = 12,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
+                    CreatedAt = VietnamTimeHelper.Now,
+                    UpdatedAt = VietnamTimeHelper.Now,
                     DepartmentId = departmentId
                 };
                 _context.Users.Add(user);

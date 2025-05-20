@@ -33,8 +33,8 @@ namespace AttendanceSystem.Services
                 PasswordHash = PasswordHasher.Hash(request.Password),
                 LeaveBalance = 12,
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now,
                 IsEmailConfirmed = false,
                 EmailConfirmationToken = Guid.NewGuid().ToString()
             };
@@ -78,7 +78,7 @@ namespace AttendanceSystem.Services
 
         public Task LogoutAsync()
         {
-            return Task.CompletedTask; // Xử lý session/cookie ở controller
+            return Task.CompletedTask;
         }
 
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
@@ -97,7 +97,7 @@ namespace AttendanceSystem.Services
             if (user == null || !user.IsEmailConfirmed) return false;
 
             user.PasswordResetToken = Guid.NewGuid().ToString();
-            user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+            user.ResetTokenExpiry = VietnamTimeHelper.Now.AddHours(1);
             await _context.SaveChangesAsync();
 
             await SendEmailAsync(
@@ -115,7 +115,7 @@ namespace AttendanceSystem.Services
 
             var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.PasswordResetToken == token &&
-                u.ResetTokenExpiry >= DateTime.UtcNow);
+                u.ResetTokenExpiry >= VietnamTimeHelper.Now);
 
             if (user == null)
             {
@@ -146,7 +146,7 @@ namespace AttendanceSystem.Services
         private async Task SendEmailAsync(string to, string subject, string body)
         {
             var from = "manhcuucon@gmail.com";
-            var password = "bwtk pazj cvle yflv"; // 🔒 là mã App Password bạn tạo từ Gmail
+            var password = "bwtk pazj cvle yflv";
 
             var smtp = new SmtpClient("smtp.gmail.com")
             {
