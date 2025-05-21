@@ -3,13 +3,10 @@ using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using AttendanceSystem.Converters;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-// Cấu hình DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Đăng ký repository và service
 builder.Services.AddScoped<IUserService, UserService>();
@@ -51,13 +48,15 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "https://localhost:5173") // ✅ React URL
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // ✅ bắt buộc để dùng cookie
-    });
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173", "https://localhost:5173") // ✅ React URL
+           .AllowAnyHeader()
+           .AllowAnyMethod()
+           .AllowCredentials();
+              }); // ✅ bắt buộc để dùng cookie
+
 });
 
 
@@ -70,7 +69,12 @@ builder.Services.AddHangfireServer();
 
 // ✅ 5. Add controller + Swagger
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new TimeSpanJsonConverter());
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -101,7 +105,7 @@ using (var scope = app.Services.CreateScope())
 // Middleware pipeline
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors();
+app.UseCors("AllowFrontend");
 app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
@@ -122,16 +126,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
 
 // ⚠️ Đặt trước session & authorization
 app.UseCors("AllowFrontend");
-
 app.UseSession();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

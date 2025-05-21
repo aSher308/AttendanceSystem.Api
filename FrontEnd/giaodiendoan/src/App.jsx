@@ -6,6 +6,8 @@ import Home from "./pages/HomePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import TimekeepingPage from "./pages/TimekeepingPage";
+import WorkSchedulePage from "./pages/WorkSchedulePage";
+import ShiftPage from "./pages/ShiftPage";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route index element={<Home />} /> {/* Trang mặc định */}
         <Route path="home" element={<Home />} />
         <Route path="timekeeping" element={<TimekeepingPage />} />
+        <Route path="workSchedule" element={<WorkSchedulePage />} />
+        <Route path="Shift" element={<ShiftPage />} />
       </Route>
     </Routes>
   );

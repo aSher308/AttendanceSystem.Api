@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\services\\shiftservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\services\\shiftservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\shiftscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\shiftscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\converters\\timespanjsonconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\converters\\timespanjsonconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -35,12 +35,24 @@
       "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\workschedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\services\\workscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\services\\workscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\services\\attendanceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\services\\attendanceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\shiftscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\shiftscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\services\\workscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|solutionrelative:attendancesystem\\services\\workscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2E7A0270-43F8-4D53-B917-665309D2C146}|AttendanceSystem\\AttendanceSystem.csproj|c:\\users\\vu484\\desktop\\clone\\attendancesystem.api\\be\\attendancesystem\\attendancesystem\\controllers\\leaverequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -71,87 +83,80 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "AttendanceSystem\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAA5wFYAAAAJAAAAAAAAAA==",
+              "Title": "ShiftsController.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\ShiftsController.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\ShiftsController.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\ShiftsController.cs",
+              "RelativeToolTip": "AttendanceSystem\\Controllers\\ShiftsController.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAuwFAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T17:43:19.876Z"
+              "WhenOpened": "2025-05-16T18:05:23.709Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AttendanceController.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AttendanceController.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\AttendanceController.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AttendanceController.cs",
-              "RelativeToolTip": "AttendanceSystem\\Controllers\\AttendanceController.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAwwDQAAAADAAAAAAAAAA==",
+              "Title": "ShiftService.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Services\\ShiftService.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Services\\ShiftService.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Services\\ShiftService.cs*",
+              "RelativeToolTip": "AttendanceSystem\\Services\\ShiftService.cs*",
+              "ViewState": "AgIAACoAAAAAAAAAAAAuwDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T17:43:18.765Z",
+              "WhenOpened": "2025-05-20T07:19:29.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TimeSpanJsonConverter.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Converters\\TimeSpanJsonConverter.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Converters\\TimeSpanJsonConverter.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Converters\\TimeSpanJsonConverter.cs",
+              "RelativeToolTip": "AttendanceSystem\\Converters\\TimeSpanJsonConverter.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAkwB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-21T07:42:06.036Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\UserController.cs",
-              "RelativeToolTip": "AttendanceSystem\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAswJAAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T18:05:31.178Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DataSeeder.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Data\\DataSeeder.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Data\\DataSeeder.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Data\\DataSeeder.cs",
-              "RelativeToolTip": "AttendanceSystem\\Data\\DataSeeder.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAQwCEAAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T14:26:44.015Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Program.cs",
               "RelativeDocumentMoniker": "AttendanceSystem\\Program.cs",
               "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Program.cs",
               "RelativeToolTip": "AttendanceSystem\\Program.cs",
-              "ViewState": "AgIAAHEAAAAAAAAAAADwv4kAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAEwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T14:25:51.665Z"
+              "WhenOpened": "2025-05-18T14:25:51.665Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\UserController.cs",
+              "RelativeToolTip": "AttendanceSystem\\Controllers\\UserController.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAcwFcAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T18:05:31.178Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "AppDbContextModelSnapshot.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
-              "RelativeToolTip": "AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "AttendanceSystem\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAUwGMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-19T05:38:24.715Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "20250519054034_Init1.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
-              "RelativeToolTip": "AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-19T05:40:34.22Z"
+              "WhenOpened": "2025-05-16T17:43:19.876Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -163,11 +168,85 @@
               "RelativeToolTip": "AttendanceSystem\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-19T05:39:31.482Z"
+              "WhenOpened": "2025-05-19T05:39:31.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "WorkScheduleController.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\WorkScheduleController.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\WorkScheduleController.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\WorkScheduleController.cs",
+              "RelativeToolTip": "AttendanceSystem\\Controllers\\WorkScheduleController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T18:05:41.198Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "AttendanceService.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Services\\AttendanceService.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Services\\AttendanceService.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Services\\AttendanceService.cs",
+              "RelativeToolTip": "AttendanceSystem\\Services\\AttendanceService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T03:54:25.598Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AttendanceController.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AttendanceController.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\AttendanceController.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\AttendanceController.cs",
+              "RelativeToolTip": "AttendanceSystem\\Controllers\\AttendanceController.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAwwDQAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T17:43:18.765Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DataSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Data\\DataSeeder.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Data\\DataSeeder.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Data\\DataSeeder.cs",
+              "RelativeToolTip": "AttendanceSystem\\Data\\DataSeeder.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwCEAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-18T14:26:44.015Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AppDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeToolTip": "AttendanceSystem\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-19T05:38:24.715Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "20250519054034_Init1.cs",
+              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
+              "RelativeDocumentMoniker": "AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
+              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
+              "RelativeToolTip": "AttendanceSystem\\Migrations\\20250519054034_Init1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-19T05:40:34.22Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "WorkScheduleService.cs",
               "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Services\\WorkScheduleService.cs",
               "RelativeDocumentMoniker": "AttendanceSystem\\Services\\WorkScheduleService.cs",
@@ -179,31 +258,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "WorkScheduleController.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\WorkScheduleController.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\WorkScheduleController.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\WorkScheduleController.cs",
-              "RelativeToolTip": "AttendanceSystem\\Controllers\\WorkScheduleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T18:05:41.198Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ShiftsController.cs",
-              "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\ShiftsController.cs",
-              "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\ShiftsController.cs",
-              "ToolTip": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\ShiftsController.cs",
-              "RelativeToolTip": "AttendanceSystem\\Controllers\\ShiftsController.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T18:05:23.709Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "LeaveRequestController.cs",
               "DocumentMoniker": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\Controllers\\LeaveRequestController.cs",
               "RelativeDocumentMoniker": "AttendanceSystem\\Controllers\\LeaveRequestController.cs",

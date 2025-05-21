@@ -51,7 +51,7 @@ namespace AttendanceSystem.Services
                 Name = request.Name,
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
-                IsActive = request.IsActive,
+                IsActive = true,
                 Description = request.Description
             };
 

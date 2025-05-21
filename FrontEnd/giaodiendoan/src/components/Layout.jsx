@@ -81,12 +81,12 @@ export default function Layout() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/settings" className="nav-link">
+              <Link to="Shift" className="nav-link">
                 Quản lý ca làm
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/settings" className="nav-link">
+              <Link to="workSchedule" className="nav-link">
                 Quản lý lịch làm
               </Link>
             </li>

@@ -56,7 +56,7 @@ function ForgotPasswordForm() {
             Gửi liên kết đặt lại mật khẩu
           </button>
           <p className="change-password">
-            <Link to="/reset-password">Đổi mật khẩu</Link>
+            <Link to="/reset-password">Đổi mật khẩu</Link> <br /> <br />
           </p>
           {message && (
             <div

@@ -327,38 +327,6 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.ShiftController",
-    "Method": "Create",
-    "RelativePath": "api/Shift",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "AttendanceSystem.DTOs.ShiftCreateRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.ShiftController",
-    "Method": "Update",
-    "RelativePath": "api/Shift",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "AttendanceSystem.DTOs.ShiftUpdateRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.ShiftController",
     "Method": "GetById",
     "RelativePath": "api/Shift/{id}",
     "HttpMethod": "GET",
@@ -406,6 +374,38 @@
         "Name": "isActive",
         "Type": "System.Boolean",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.ShiftController",
+    "Method": "Create",
+    "RelativePath": "api/Shift/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AttendanceSystem.DTOs.ShiftCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.ShiftController",
+    "Method": "Update",
+    "RelativePath": "api/Shift/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AttendanceSystem.DTOs.ShiftUpdateRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

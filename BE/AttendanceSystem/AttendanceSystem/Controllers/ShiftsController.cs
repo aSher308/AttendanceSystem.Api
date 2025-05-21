@@ -33,15 +33,28 @@ namespace AttendanceSystem.Controllers
         }
 
         //Create Shift
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] ShiftCreateRequest request)
         {
-            var created = await _shiftService.CreateAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var created = await _shiftService.CreateAsync(request);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            catch (Exception ex)
+            {
+                // Log ex.Message hoặc ex.ToString() ở đây để biết chi tiết lỗi
+                return StatusCode(500, new { message = "Lỗi khi tạo ca làm", detail = ex.Message });
+            }
         }
 
         //Update Shift
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] ShiftUpdateRequest request)
         {
             var result = await _shiftService.UpdateAsync(request);

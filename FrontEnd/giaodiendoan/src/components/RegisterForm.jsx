@@ -4,7 +4,7 @@ import "../styles/style.css";
 import { API_URL } from "../config";
 import { Link } from "react-router-dom";
 
-const REGISTER_URL = `${API_URL}/Account`; // chữ thường, đúng với controller route
+const REGISTER_URL = `${API_URL}/Account`;
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +16,8 @@ function RegisterForm() {
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,13 +25,16 @@ function RegisterForm() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+    setMessage("");
+    setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
       setMessage("Mật khẩu không khớp.");
+      setLoading(false);
       return;
     }
 
-    // Chuẩn bị dữ liệu gửi lên backend
     const requestData = {
       fullName: formData.fullName,
       email: formData.email,
@@ -39,17 +44,18 @@ function RegisterForm() {
 
     try {
       const response = await axios.post(
-        `${REGISTER_URL}/register`, // -> https://localhost:5001/api/account/register
+        `${REGISTER_URL}/register`,
         requestData
       );
       setMessage(response.data);
     } catch (error) {
-      // Nếu lỗi 409 (Conflict) do email tồn tại sẽ được backend trả về
       if (error.response?.status === 409) {
         setMessage("Email đã tồn tại.");
       } else {
         setMessage(error.response?.data || "Lỗi đăng ký");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,11 +101,27 @@ function RegisterForm() {
         value={formData.confirmPassword}
         required
       />
-      <button type="submit">Đăng ký</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Đang đăng ký..." : "Đăng ký"}
+      </button>
+
+      {submitted && (
+        <p
+          style={{
+            color: loading
+              ? "gray"
+              : message.includes("thành công")
+              ? "green"
+              : "red",
+          }}
+        >
+          {loading ? "Đang đăng ký..." : message}
+        </p>
+      )}
+
       <p className="change-password-link">
         <Link to="/">Đăng nhập</Link>
       </p>
-      <p>{message}</p>
     </form>
   );
 }
