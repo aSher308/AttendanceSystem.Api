@@ -8,6 +8,7 @@ namespace AttendanceSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [RequireRole("User","Admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -20,6 +21,7 @@ namespace AttendanceSystem.Controllers
         // Lấy danh sách người dùng có bộ lọc
        
         [HttpGet]
+        [RequireRole("Admin")]
         public async Task<IActionResult> GetAll([FromQuery] string? keyword, [FromQuery] int? departmentId,
                                                 [FromQuery] bool? isActive, [FromQuery] string? role)
         {
@@ -33,6 +35,7 @@ namespace AttendanceSystem.Controllers
 
         // Tạo user mới
         [HttpPost]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Create([FromForm] UserCreateRequest request)
         {
             var created = await _userService.CreateAsync(request);
@@ -41,6 +44,7 @@ namespace AttendanceSystem.Controllers
 
         // Cập nhật user
         [HttpPut]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Update([FromBody] UserUpdateRequest request)
         {
             var result = await _userService.UpdateAsync(request);
@@ -49,6 +53,7 @@ namespace AttendanceSystem.Controllers
 
         // Đổi trạng thái hoạt động
         [HttpPatch("{id}/status")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ChangeStatus(int id, [FromQuery] bool isActive)
         {
             var result = await _userService.ChangeStatusAsync(id, isActive);
@@ -57,6 +62,7 @@ namespace AttendanceSystem.Controllers
 
         // Gán vai trò cho user
         [HttpPost("{id}/assign-role")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> AssignRole(int id, [FromBody] int roleId)
         {
             var result = await _userService.AssignRoleAsync(id, roleId);
@@ -65,6 +71,7 @@ namespace AttendanceSystem.Controllers
 
         // Đặt lại mật khẩu
         [HttpPost("{id}/reset-password")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ResetPasswordByAdmin(int id, [FromBody] string newPassword)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -79,6 +86,7 @@ namespace AttendanceSystem.Controllers
 
         // Xem + Cập nhật thông tin cá nhân
         [HttpGet("me")]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> GetMe()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -89,6 +97,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpPut("me")]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> UpdateMe([FromBody] UserUpdateRequest request)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -99,6 +108,7 @@ namespace AttendanceSystem.Controllers
 
         // Đổi mật khẩu
         [HttpPost("change-password")]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -120,6 +130,7 @@ namespace AttendanceSystem.Controllers
 
         // Import Excel danh sách user
         [HttpPost("import")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ImportUsers(IFormFile file)
         {
             if (file == null || file.Length == 0) return BadRequest("File không hợp lệ");
@@ -128,6 +139,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("export")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ExportUsers()
         {
             var users = await _userService.GetFilteredAsync(0, true, null, null, null, null); // Lấy tất cả

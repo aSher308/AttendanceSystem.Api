@@ -7,11 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cấu hình DbContext
+// ---------------------- CẤU HÌNH DỊCH VỤ ----------------------
+
+// DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Đăng ký repository và service
+// Repositories & Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
@@ -21,9 +23,10 @@ builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
-/*builder.Services.AddScoped<IActivityLogService, ActivityLogService>();*/
+builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-// Thêm session
+
+// Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -32,22 +35,24 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Thêm CORS (nếu frontend React/Vue...)
+// CORS (chỉ cho phép FE từ localhost:5173)
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Cho phép gửi Cookie (Session)
     });
 });
 
-// Hangfire config
+// Hangfire
 builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddHangfireServer();
 
-// Add controllers
-builder.Services.AddControllers();
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -58,9 +63,12 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API hệ thống chấm công online có đăng nhập, phân quyền, xác thực email"
     });
 });
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
-// Seed database: role + admin + shift
+// ---------------------- SEED DATABASE ----------------------
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -71,25 +79,28 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedDepartmentsAsync(dbContext);
 }
 
+// ---------------------- MIDDLEWARE PIPELINE ----------------------
 app.UseErrorHandling();
-
-// Middleware pipeline
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseCors();
-app.UseSession();
-app.UseAuthorization();
-app.MapControllers();
-
-// Enable Hangfire Dashboard
-app.UseHangfireDashboard();
-
-// Đăng ký job tự động đánh vắng mỗi ngày lúc 23h
-AttendanceService.ScheduleDailyAbsentJob();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+// Dùng chính sách CORS đã cấu hình
+app.UseCors("AllowFrontend");
+
+app.UseSession();
+app.UseAuthorization();
+app.UseHangfireDashboard();
+
+app.MapControllers();
+
+// ---------------------- JOB TỰ ĐỘNG ----------------------
+AttendanceService.ScheduleDailyAbsentJob();
+
 app.Run();

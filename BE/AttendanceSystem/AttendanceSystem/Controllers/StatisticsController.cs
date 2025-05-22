@@ -1,10 +1,12 @@
-﻿using AttendanceSystem.Services.Interfaces;
+﻿using AttendanceSystem.Attributes;
+using AttendanceSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AttendanceSystem.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [RequireRole("User", "Admin")]
     public class StatisticsController : ControllerBase
     {
         private readonly IStatisticsService _statisticsService;
@@ -14,23 +16,32 @@ namespace AttendanceSystem.Controllers
             _statisticsService = statisticsService;
         }
 
-        [HttpGet("user/{userId}/summary")]
-        public async Task<IActionResult> GetSummary(int userId, DateTime from, DateTime to)
+        [HttpGet("me/summary")]
+        [RequireRole("User", "Admin")]
+        public async Task<IActionResult> GetSummary(DateTime from, DateTime to)
         {
-            var result = await _statisticsService.GetSummaryAsync(userId, from, to);
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return Unauthorized();
+
+            var result = await _statisticsService.GetSummaryAsync(userId.Value, from, to);
             if (result == null) return NotFound();
             return Ok(result);
         }
 
-        [HttpGet("user/{userId}/leave-overtime")]
-        public async Task<IActionResult> GetLeaveAndOvertime(int userId, DateTime from, DateTime to)
+        [HttpGet("me/leave-overtime")]
+        [RequireRole("User", "Admin")]
+        public async Task<IActionResult> GetLeaveAndOvertime(DateTime from, DateTime to)
         {
-            var result = await _statisticsService.GetLeaveAndOvertimeAsync(userId, from, to);
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return Unauthorized();
+
+            var result = await _statisticsService.GetLeaveAndOvertimeAsync(userId.Value, from, to);
             if (result == null) return NotFound();
             return Ok(result);
         }
 
         [HttpGet("export-excel")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ExportToExcel(DateTime from, DateTime to)
         {
             var bytes = await _statisticsService.ExportToExcelAsync(from, to);
@@ -38,6 +49,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("all")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> GetAllStatistics(DateTime from, DateTime to)
         {
             var result = await _statisticsService.GetAllSummaryAsync(from, to);

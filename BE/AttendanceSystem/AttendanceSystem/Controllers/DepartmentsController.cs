@@ -1,5 +1,6 @@
 ﻿// Controllers/DepartmentsController.cs
 
+using AttendanceSystem.Attributes;
 using AttendanceSystem.Models.DTOs;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace AttendanceSystem.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [RequireRole("User", "Admin")]
     public class DepartmentsController : ControllerBase
     {
         private readonly IDepartmentService _departmentService;
@@ -20,6 +22,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet]
+        [RequireRole("User", "Admin")]
         public async Task<ActionResult<IEnumerable<DepartmentDto>>> GetAll()
         {
             var departments = await _departmentService.GetAllDepartmentsAsync();
@@ -27,6 +30,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("{id}")]
+        [RequireRole("User", "Admin")]
         public async Task<ActionResult<DepartmentDetailDto>> GetById(int id)
         {
             var department = await _departmentService.GetDepartmentByIdAsync(id);
@@ -35,6 +39,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpPost]
+        [RequireRole("Admin")]
         public async Task<ActionResult<DepartmentDetailDto>> Create([FromBody] CreateDepartmentDto departmentDto)
         {
             if (!ModelState.IsValid)
@@ -47,6 +52,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpPut("{id}")]
+        [RequireRole("Admin")]
         public async Task<ActionResult<DepartmentDetailDto>> Update(int id, [FromBody] UpdateDepartmentDto departmentDto)
         {
             if (id != departmentDto.Id)
@@ -66,6 +72,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpDelete("{id}")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _departmentService.DeleteDepartmentAsync(id);

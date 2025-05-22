@@ -85,6 +85,16 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.AccountController",
+    "Method": "Me",
+    "RelativePath": "api/Account/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.AccountController",
     "Method": "Register",
     "RelativePath": "api/Account/register",
     "HttpMethod": "POST",
@@ -784,16 +794,11 @@
   {
     "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
     "Method": "GetLeaveAndOvertime",
-    "RelativePath": "api/Statistics/user/{userId}/leave-overtime",
+    "RelativePath": "api/Statistics/me/leave-overtime",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
       {
         "Name": "from",
         "Type": "System.DateTime",
@@ -810,16 +815,11 @@
   {
     "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
     "Method": "GetSummary",
-    "RelativePath": "api/Statistics/user/{userId}/summary",
+    "RelativePath": "api/Statistics/me/summary",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
       {
         "Name": "from",
         "Type": "System.DateTime",
