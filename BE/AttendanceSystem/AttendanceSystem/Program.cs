@@ -21,7 +21,8 @@ builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
-/*builder.Services.AddScoped<IDepartmentService, DepartmentService>();*/
+/*builder.Services.AddScoped<IActivityLogService, ActivityLogService>();*/
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 // Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -67,9 +68,11 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedAdminUserAsync(dbContext);
     await DataSeeder.SeedShiftsAsync(dbContext);
     await DataSeeder.SeedLocationsAsync(dbContext);
+    await DataSeeder.SeedDepartmentsAsync(dbContext);
 }
 
 app.UseErrorHandling();
+
 // Middleware pipeline
 app.UseHttpsRedirection();
 app.UseRouting();
