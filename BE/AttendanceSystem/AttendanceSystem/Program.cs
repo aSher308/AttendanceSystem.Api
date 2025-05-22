@@ -20,7 +20,8 @@ builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+/*builder.Services.AddScoped<IDepartmentService, DepartmentService>();*/
 // Thêm session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

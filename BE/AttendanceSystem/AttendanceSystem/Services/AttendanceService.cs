@@ -12,7 +12,6 @@ namespace AttendanceSystem.Services
     public class AttendanceService : IAttendanceService
     {
         private readonly AppDbContext _context;
-        private readonly INotificationService _notificationService;
         public AttendanceService(AppDbContext context)
         {
             _context = context;

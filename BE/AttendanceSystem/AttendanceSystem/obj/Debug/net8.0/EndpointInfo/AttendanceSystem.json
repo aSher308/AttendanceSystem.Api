@@ -664,150 +664,6 @@
         }
       }
     },
-    "/api/Notifications/user/{userId}": {
-      "get": {
-        "tags": [
-          "Notifications"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notifications/user/{userId}/unread": {
-      "get": {
-        "tags": [
-          "Notifications"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notifications/{id}": {
-      "get": {
-        "tags": [
-          "Notifications"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Notifications"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notifications": {
-      "post": {
-        "tags": [
-          "Notifications"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SystemNotification"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SystemNotification"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SystemNotification"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Notifications/{id}/read": {
-      "put": {
-        "tags": [
-          "Notifications"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/OvertimeRequest": {
       "post": {
         "tags": [
@@ -1070,6 +926,144 @@
             "in": "query",
             "schema": {
               "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Statistics/user/{userId}/summary": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Statistics/user/{userId}/leave-overtime": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Statistics/export-excel": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Statistics/all": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
             }
           }
         ],
@@ -1590,120 +1584,6 @@
   },
   "components": {
     "schemas": {
-      "Attendance": {
-        "required": [
-          "attendanceType",
-          "checkIn",
-          "status",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "checkIn": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "checkOut": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/AttendanceStatus"
-          },
-          "attendanceType": {
-            "$ref": "#/components/schemas/AttendanceType"
-          },
-          "locationName": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "locationId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "location": {
-            "$ref": "#/components/schemas/Location"
-          },
-          "deviceInfo": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "checkInLatitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "checkInLongitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "checkOutLatitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "checkOutLongitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "checkInPhotoUrl": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "checkOutPhotoUrl": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "adjustedBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "adjustedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "adjustmentReason": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "isCheckedOut": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "isCheckedIn": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "AttendanceCheckInRequest": {
         "type": "object",
         "properties": {
@@ -1834,113 +1714,6 @@
         },
         "additionalProperties": false
       },
-      "Department": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LeaveRequest": {
-        "required": [
-          "fromDate",
-          "leaveType",
-          "toDate",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "fromDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "toDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "leaveType": {
-            "$ref": "#/components/schemas/LeaveType"
-          },
-          "reason": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/RequestStatus"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reviewedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "approvedBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "reviewerComment": {
-            "maxLength": 300,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          }
-        },
-        "additionalProperties": false
-      },
       "LeaveRequestApprovalRequest": {
         "type": "object",
         "properties": {
@@ -2028,42 +1801,6 @@
         "type": "integer",
         "format": "int32"
       },
-      "Location": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "radiusInMeters": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isDefault": {
-            "type": "boolean"
-          },
-          "attendances": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Attendance"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "LocationCreateRequest": {
         "type": "object",
         "properties": {
@@ -2132,15 +1869,6 @@
         },
         "additionalProperties": false
       },
-      "NotificationType": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
       "OvertimeApprovalRequest": {
         "type": "object",
         "properties": {
@@ -2154,55 +1882,6 @@
           "approvedBy": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "OvertimeRequest": {
-        "required": [
-          "date",
-          "endTime",
-          "startTime",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-span"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-span"
-          },
-          "reason": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/RequestStatus"
-          },
-          "approvedBy": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
@@ -2229,47 +1908,6 @@
           "reason": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "QRCodeEntry": {
-        "required": [
-          "scanTime",
-          "scanType",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scanTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "qrCodeData": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "scanType": {
-            "$ref": "#/components/schemas/ScanType"
-          },
-          "deviceInfo": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
@@ -2318,45 +1956,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "Role": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "userRoles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRole"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ScanType": {
-        "enum": [
-          0,
-          1
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "ShiftCreateRequest": {
         "type": "object",
@@ -2408,189 +2007,6 @@
           "description": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "SystemNotification": {
-        "required": [
-          "content",
-          "notificationType",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
-          },
-          "content": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "isRead": {
-            "type": "boolean"
-          },
-          "notificationType": {
-            "$ref": "#/components/schemas/NotificationType"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          }
-        },
-        "additionalProperties": false
-      },
-      "User": {
-        "required": [
-          "email",
-          "fullName",
-          "passwordHash"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "fullName": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "email": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "format": "email"
-          },
-          "passwordHash": {
-            "maxLength": 255,
-            "minLength": 6,
-            "type": "string"
-          },
-          "phoneNumber": {
-            "type": "string",
-            "format": "tel",
-            "nullable": true
-          },
-          "leaveBalance": {
-            "maximum": 2147483647,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "avatarUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isEmailConfirmed": {
-            "type": "boolean"
-          },
-          "emailConfirmationToken": {
-            "type": "string",
-            "nullable": true
-          },
-          "passwordResetToken": {
-            "type": "string",
-            "nullable": true
-          },
-          "resetTokenExpiry": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "departmentId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "department": {
-            "$ref": "#/components/schemas/Department"
-          },
-          "userRoles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRole"
-            },
-            "nullable": true
-          },
-          "attendances": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Attendance"
-            },
-            "nullable": true
-          },
-          "leaveRequests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LeaveRequest"
-            },
-            "nullable": true
-          },
-          "overtimeRequests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OvertimeRequest"
-            },
-            "nullable": true
-          },
-          "qrCodeEntries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QRCodeEntry"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserRole": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "roleId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "assignedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
           }
         },
         "additionalProperties": false

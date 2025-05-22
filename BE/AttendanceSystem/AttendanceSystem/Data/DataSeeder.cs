@@ -31,8 +31,8 @@ namespace AttendanceSystem.Data
                     LeaveBalance = 30,
                     IsEmailConfirmed = true,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = VietnamTimeHelper.Now,
+                    UpdatedAt = VietnamTimeHelper.Now
                 };
 
                 context.Users.Add(adminUser);

@@ -36,7 +36,6 @@ namespace AttendanceSystem.Middleware
         }
     }
 
-    // Extension để gọi middleware gọn trong Program.cs
     public static class ErrorHandlingMiddlewareExtensions
     {
         public static IApplicationBuilder UseErrorHandling(this IApplicationBuilder builder)

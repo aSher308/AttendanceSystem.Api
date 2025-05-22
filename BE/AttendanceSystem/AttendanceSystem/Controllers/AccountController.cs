@@ -57,7 +57,7 @@ namespace AttendanceSystem.Controllers
         public async Task<IActionResult> Logout()
         {
             await _accountService.LogoutAsync();
-            HttpContext.Session.Clear(); // Xoá session
+            HttpContext.Session.Clear(); 
             return Ok("Đăng xuất thành công");
         }
         // Đổi mật khẩu
@@ -74,7 +74,7 @@ namespace AttendanceSystem.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
-            var resetUrl = $"{Request.Scheme}://{Request.Host}/reset-password"; // Link gửi qua email
+            var resetUrl = $"{Request.Scheme}://{Request.Host}/reset-password"; 
             var success = await _accountService.ForgotPasswordAsync(email, resetUrl);
             return success ? Ok("Đã gửi email đặt lại mật khẩu.") : NotFound("Không tìm thấy tài khoản.");
         }
