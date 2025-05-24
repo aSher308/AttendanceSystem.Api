@@ -33,6 +33,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; //Lưu ý
 });
 
 // CORS (chỉ cho phép FE từ localhost:5173)

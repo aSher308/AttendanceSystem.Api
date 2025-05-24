@@ -73,15 +73,18 @@ namespace AttendanceSystem.Controllers
                 .Select(ur => ur.Role.Name)
                 .ToListAsync();
 
-            if (roles.Any())
-                HttpContext.Session.SetString("Role", roles.First());
+            var primaryRole = roles.FirstOrDefault();
+            if (!string.IsNullOrEmpty(primaryRole))
+            {
+                HttpContext.Session.SetString("Role", primaryRole);
+            }
 
             return Ok(new
             {
                 Message = "Đăng nhập thành công",
                 user.Id,
                 user.FullName,
-                Role = roles.FirstOrDefault()
+                Role = primaryRole // Chỉ trả về role chính
             });
         }
 
