@@ -1,8 +1,16 @@
-﻿using AttendanceSystem.Data;
-using AttendanceSystem.DTOs;
+﻿// Services/ActivityLogService.cs
+using AttendanceSystem.Data;
+using AttendanceSystem.Models;
+using AttendanceSystem.Models.DTOs;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AttendanceSystem.Services
 {
@@ -13,58 +21,110 @@ namespace AttendanceSystem.Services
         public ActivityLogService(AppDbContext context)
         {
             _context = context;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
-        public async Task<List<ActivityLogDto>> GetLogsAsync(DateTime? from, DateTime? to, int? userId)
+        public async Task LogActivityAsync(int userId, string action, string description, string ipAddress, string deviceInfo)
+        {
+            var log = new ActivityLog
+            {
+                UserId = userId,
+                Action = Truncate(action, 100),
+                Description = Truncate(description, 500),
+                Timestamp = DateTime.UtcNow,
+                IPAddress = Truncate(ipAddress, 50),
+                DeviceInfo = Truncate(deviceInfo, 200)
+            };
+
+            await _context.ActivityLogs.AddAsync(log);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<ActivityLogDto>> GetPagedLogsAsync(
+            int pageNumber = 1,
+            int pageSize = 10,
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int? userId = null)
         {
             var query = _context.ActivityLogs
-                .Include(a => a.User)
+                .Include(x => x.User)
                 .AsQueryable();
 
-            if (from.HasValue)
-                query = query.Where(a => a.Timestamp >= from.Value);
-            if (to.HasValue)
-                query = query.Where(a => a.Timestamp <= to.Value);
-            if (userId.HasValue)
-                query = query.Where(a => a.UserId == userId.Value);
+            if (fromDate.HasValue) query = query.Where(x => x.Timestamp >= fromDate);
+            if (toDate.HasValue) query = query.Where(x => x.Timestamp <= toDate);
+            if (userId.HasValue) query = query.Where(x => x.UserId == userId);
 
-            return await query
-                .OrderByDescending(a => a.Timestamp)
-                .Select(a => new ActivityLogDto
+            var totalCount = await query.CountAsync();
+
+            var logs = await query
+                .OrderByDescending(x => x.Timestamp)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new ActivityLogDto
                 {
-                    UserId = a.UserId,
-                    UserName = a.User.FullName,
-                    Action = a.Action,
-                    DeviceInfo = a.DeviceInfo
+                    Id = x.Id,
+                    Timestamp = x.Timestamp,
+                    UserName = x.User.FullName,
+                    Action = x.Action,
+                    Description = x.Description,
+                    IPAddress = x.IPAddress,
+                    DeviceInfo = x.DeviceInfo
                 })
                 .ToListAsync();
+
+            return new PagedResult<ActivityLogDto>
+            {
+                Items = logs,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
-        public async Task<byte[]> ExportLogsToExcelAsync(DateTime? from, DateTime? to, int? userId)
+        public async Task<byte[]> ExportExcelAsync(DateTime? fromDate, DateTime? toDate)
         {
-            var logs = await GetLogsAsync(from, to, userId);
+            var logs = await _context.ActivityLogs
+                .Include(x => x.User)
+                .Where(x => (!fromDate.HasValue || x.Timestamp >= fromDate) &&
+                           (!toDate.HasValue || x.Timestamp <= toDate))
+                .OrderByDescending(x => x.Timestamp)
+                .ToListAsync();
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage();
-            var sheet = package.Workbook.Worksheets.Add("ActivityLogs");
+            var worksheet = package.Workbook.Worksheets.Add("Activity Logs");
 
-            sheet.Cells[1, 1].Value = "User ID";
-            sheet.Cells[1, 2].Value = "Họ tên";
-            sheet.Cells[1, 3].Value = "Hành động";
-            sheet.Cells[1, 4].Value = "Thiết bị";
+            // Header
+            worksheet.Cells["A1:F1"].Style.Font.Bold = true;
+            worksheet.Cells["A1:F1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            worksheet.Cells["A1:F1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
-            int row = 2;
-            foreach (var log in logs)
+            worksheet.Cells[1, 1].Value = "Thời gian";
+            worksheet.Cells[1, 2].Value = "Người dùng";
+            worksheet.Cells[1, 3].Value = "Hành động";
+            worksheet.Cells[1, 4].Value = "Mô tả";
+            worksheet.Cells[1, 5].Value = "IP";
+            worksheet.Cells[1, 6].Value = "Thiết bị";
+
+            // Data
+            for (int i = 0; i < logs.Count; i++)
             {
-                sheet.Cells[row, 1].Value = log.UserId;
-                sheet.Cells[row, 2].Value = log.UserName;
-                sheet.Cells[row, 3].Value = log.Action;
-                sheet.Cells[row, 4].Value = log.DeviceInfo;
-                row++;
+                worksheet.Cells[i + 2, 1].Value = logs[i].Timestamp.ToString("g");
+                worksheet.Cells[i + 2, 2].Value = logs[i].User?.FullName;
+                worksheet.Cells[i + 2, 3].Value = logs[i].Action;
+                worksheet.Cells[i + 2, 4].Value = logs[i].Description;
+                worksheet.Cells[i + 2, 5].Value = logs[i].IPAddress;
+                worksheet.Cells[i + 2, 6].Value = logs[i].DeviceInfo;
             }
 
-            return package.GetAsByteArray();
-        }
-    }
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
+            using var stream = new MemoryStream();
+            package.SaveAs(stream);
+            return stream.ToArray();
+        }
+
+        private static string Truncate(string value, int maxLength) =>
+            string.IsNullOrEmpty(value) ? value : value.Length <= maxLength ? value : value[..maxLength];
+    }
 }

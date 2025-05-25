@@ -81,7 +81,7 @@ using (var scope = app.Services.CreateScope())
 
 // ---------------------- MIDDLEWARE PIPELINE ----------------------
 app.UseErrorHandling();
-
+app.UseMiddleware<ActivityLogApiMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -95,7 +95,9 @@ app.UseRouting();
 app.UseCors("AllowFrontend");
 
 app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseHangfireDashboard();
 
 app.MapControllers();

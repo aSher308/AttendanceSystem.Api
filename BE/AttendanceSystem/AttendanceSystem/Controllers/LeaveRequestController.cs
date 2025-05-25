@@ -14,9 +14,10 @@ namespace AttendanceSystem.Controllers
     {
         private readonly ILeaveRequestService _leaveRequestService;
         private readonly IAccountService _accountService;
-        public LeaveRequestController(ILeaveRequestService leaveRequestService)
+        public LeaveRequestController(ILeaveRequestService leaveRequestService, IAccountService accountService)
         {
             _leaveRequestService = leaveRequestService;
+            _accountService = accountService;
         }
         // Tạo đơn nghỉ
         [HttpPost]
@@ -44,24 +45,31 @@ namespace AttendanceSystem.Controllers
             if (!success) return NotFound("Không tìm thấy hoặc không thể xoá đơn nghỉ.");
             return Ok("Xoá thành công");
         }
+
+
         // Lấy tất cả các đơn
         [HttpGet]
-        [RequireRole("User", "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery] int? userId, [FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string? status)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int? userId,
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate,
+            [FromQuery] string? status)
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
-            if (currentUserId == null) return Unauthorized();
+            if (currentUserId == null)
+                return Unauthorized("Chưa đăng nhập");
 
-            // Nếu không phải admin thì ép userId = chính mình
-            var isAdmin = await _accountService.IsAdminAsync(currentUserId.Value);
+            bool isAdmin = await _accountService.IsAdminAsync(currentUserId.Value);
+
             if (!isAdmin)
             {
-                userId = currentUserId.Value; // Ép userId về chính user đang đăng nhập
+                userId = currentUserId.Value;
             }
 
-            var list = await _leaveRequestService.GetAllAsync(userId, from, to, status);
+            var list = await _leaveRequestService.GetAllAsync(userId, fromDate, toDate, status);
             return Ok(list);
         }
+
 
         /*        [HttpGet("{id}")]
                 public async Task<IActionResult> GetById(int id)
@@ -70,6 +78,7 @@ namespace AttendanceSystem.Controllers
                     if (item == null) return NotFound();
                     return Ok(item);
                 }*/
+
         // Chấp nhận hoặc hủy đơn
         [HttpPut("approve")]
         [RequireRole("Admin")]

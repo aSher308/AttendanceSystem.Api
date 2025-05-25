@@ -1,32 +1,47 @@
-﻿using AttendanceSystem.Services.Interfaces;
+﻿// Controllers/ActivityLogsController.cs
+using AttendanceSystem.Attributes;
+using AttendanceSystem.Models.DTOs;
+using AttendanceSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace AttendanceSystem.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [RequireRole("Admin")]
     public class ActivityLogsController : ControllerBase
     {
-        private readonly IActivityLogService _activityLogService;
+        private readonly IActivityLogService _logService;
 
-        public ActivityLogsController(IActivityLogService activityLogService)
+        public ActivityLogsController(IActivityLogService logService)
         {
-            _activityLogService = activityLogService;
+            _logService = logService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLogs([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] int? userId)
+        public async Task<ActionResult<PagedResult<ActivityLogDto>>> GetPaged(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] DateTime? fromDate = null,
+            [FromQuery] DateTime? toDate = null,
+            [FromQuery] int? userId = null)
         {
-            var logs = await _activityLogService.GetLogsAsync(from, to, userId);
-            return Ok(logs);
+            var result = await _logService.GetPagedLogsAsync(pageNumber, pageSize, fromDate, toDate, userId);
+            return Ok(result);
         }
 
         [HttpGet("export")]
-        public async Task<IActionResult> ExportLogs([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] int? userId)
+        public async Task<IActionResult> ExportExcel(
+            [FromQuery] DateTime? fromDate = null,
+            [FromQuery] DateTime? toDate = null)
         {
-            var content = await _activityLogService.ExportLogsToExcelAsync(from, to, userId);
-            return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ActivityLogs.xlsx");
+            var excelBytes = await _logService.ExportExcelAsync(fromDate, toDate);
+            return File(excelBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"ActivityLogs_{DateTime.Now:yyyyMMdd}.xlsx");
         }
     }
-
 }

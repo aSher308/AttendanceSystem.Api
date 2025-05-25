@@ -78,19 +78,35 @@ namespace AttendanceSystem.Services
             return true;
         }
 
-        public async Task<List<LeaveRequestResponse>> GetAllAsync(int? userId, DateTime? from, DateTime? to, string? status)
+        public async Task<List<LeaveRequestResponse>> GetAllAsync(
+    int? userId, DateTime? from, DateTime? to, string? status)
         {
             var query = _context.LeaveRequests.Include(l => l.User).AsQueryable();
 
-            if (userId.HasValue) query = query.Where(l => l.UserId == userId);
-            if (from.HasValue) query = query.Where(l => l.FromDate >= from);
-            if (to.HasValue) query = query.Where(l => l.ToDate <= to);
-            if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, out var s))
-                query = query.Where(l => l.Status == s);
+            if (userId.HasValue)
+            {
+                query = query.Where(l => l.UserId == userId.Value);
+            }
+
+            if (from.HasValue)
+            {
+                query = query.Where(l => l.FromDate >= from.Value);
+            }
+
+            if (to.HasValue)
+            {
+                query = query.Where(l => l.ToDate <= to.Value);
+            }
+
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, out var parsedStatus))
+            {
+                query = query.Where(l => l.Status == parsedStatus);
+            }
 
             var list = await query.ToListAsync();
             return list.Select(MapToResponse).ToList();
         }
+
 
         public async Task<LeaveRequestResponse?> GetByIdAsync(int id)
         {
