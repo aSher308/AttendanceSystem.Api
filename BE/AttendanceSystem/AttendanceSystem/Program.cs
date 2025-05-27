@@ -3,6 +3,7 @@ using AttendanceSystem.Middleware;
 using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; //Lưu ý
+    options.Cookie.Name = ".AttendanceSystem.Session";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 // CORS (chỉ cho phép FE từ localhost:5173)
@@ -44,9 +46,21 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // Cho phép gửi Cookie (Session)
+              .AllowCredentials();
     });
 });
+
+// Authentication - Cookie-based
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = ".AttendanceSystem.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.None; // Quan trọng cho cross-origin cookie
+        options.LoginPath = "/Account/Login"; // Điều chỉnh theo controller của bạn
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
 
 // Hangfire
 builder.Services.AddHangfire(config =>
@@ -90,13 +104,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
 
-// Dùng chính sách CORS đã cấu hình
 app.UseCors("AllowFrontend");
 
-app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
+
 app.UseHangfireDashboard();
 
 app.MapControllers();

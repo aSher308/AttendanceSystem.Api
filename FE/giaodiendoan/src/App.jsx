@@ -9,6 +9,8 @@ import TimekeepingPage from "./pages/TimekeepingPage";
 import WorkSchedulePage from "./pages/WorkSchedulePage";
 import ShiftPage from "./pages/ShiftPage";
 import StatisticsPage from "./pages/StatisticsPage";
+import QuanLyNhanVienPage from "./pages/QuanLyNhanVienPage";
+import EditUserPage from "./pages/EditUserPage";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path="workSchedule" element={<WorkSchedulePage />} />
         <Route path="Shift" element={<ShiftPage />} />
         <Route path="Statistics" element={<StatisticsPage />} />
+        <Route path="QuanLyNhanVien" element={<QuanLyNhanVienPage />} />
+        <Route path="QuanLyNhanVien/edit/:id" element={<EditUserPage />} />
       </Route>
     </Routes>
   );

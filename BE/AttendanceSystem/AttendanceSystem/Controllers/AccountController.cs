@@ -62,11 +62,11 @@ namespace AttendanceSystem.Controllers
             if (!PasswordHasher.Verify(request.Password, user.PasswordHash))
                 return Unauthorized("Sai mật khẩu.");
 
-            // Lưu session
+            // Lưu thông tin user vào Session
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("FullName", user.FullName);
 
-            // Lấy role của user
+            // Lấy role user
             var roles = await _context.UserRoles
                 .Include(ur => ur.Role)
                 .Where(ur => ur.UserId == user.Id)
@@ -79,12 +79,13 @@ namespace AttendanceSystem.Controllers
                 HttpContext.Session.SetString("Role", primaryRole);
             }
 
+            // Trả về response cho frontend
             return Ok(new
             {
                 Message = "Đăng nhập thành công",
                 user.Id,
                 user.FullName,
-                Role = primaryRole // Chỉ trả về role chính
+                Role = primaryRole
             });
         }
 

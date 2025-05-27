@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import { API_URL } from "../config";
+import axiosInstance from "../utils/axiosInstance";
 import "../styles/style.css";
 
 const WorkScheduleForm = () => {
@@ -20,32 +19,34 @@ const WorkScheduleForm = () => {
   const [filterYear, setFilterYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(false);
 
+  // Lấy danh sách nhân viên
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(`${API_URL}/User`);
+      const res = await axiosInstance.get(`/User`);
       setEmployees(res.data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách nhân viên:", err);
     }
   };
 
+  // Lấy danh sách ca làm
   const fetchShifts = async () => {
     try {
-      const res = await axios.get(`${API_URL}/Shift`);
+      const res = await axiosInstance.get(`/Shift`);
       setShifts(res.data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách ca làm:", err);
     }
   };
 
-  // ✅ Sử dụng useCallback để tránh cảnh báo ESLint
+  // Lấy lịch làm theo tháng năm lọc
   const fetchSchedules = useCallback(async () => {
     setLoading(true);
     try {
       const firstDay = new Date(filterYear, filterMonth - 1, 1);
       const lastDay = new Date(filterYear, filterMonth, 0);
 
-      const res = await axios.get(`${API_URL}/WorkSchedule`, {
+      const res = await axiosInstance.get(`/WorkSchedule`, {
         params: {
           fromDate: firstDay.toISOString(),
           toDate: lastDay.toISOString(),
@@ -68,11 +69,19 @@ const WorkScheduleForm = () => {
     fetchSchedules();
   }, [fetchSchedules]);
 
-  // Các hàm khác giữ nguyên...
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      userId: "",
+      shiftId: "",
+      workDate: "",
+      note: "",
+      status: "Active",
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -84,14 +93,16 @@ const WorkScheduleForm = () => {
       };
 
       if (updateId) {
-        await axios.put(`${API_URL}/WorkSchedule`, {
+        // Cập nhật lịch làm
+        await axiosInstance.put(`/WorkSchedule`, {
           ...payload,
           id: updateId,
         });
         alert("Cập nhật lịch làm thành công!");
         setUpdateId(null);
       } else {
-        await axios.post(`${API_URL}/WorkSchedule`, payload);
+        // Tạo mới lịch làm
+        await axiosInstance.post(`/WorkSchedule`, payload);
         alert("Tạo lịch làm thành công!");
       }
 
@@ -101,16 +112,6 @@ const WorkScheduleForm = () => {
       console.error("Lỗi:", err.response?.data || err.message);
       alert("Có lỗi xảy ra: " + (err.response?.data?.message || err.message));
     }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      userId: "",
-      shiftId: "",
-      workDate: "",
-      note: "",
-      status: "Active",
-    });
   };
 
   const handleEdit = (schedule) => {
@@ -125,9 +126,9 @@ const WorkScheduleForm = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm("Bạn có chắc chắn muốn xóa lịch làm này không?")) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa lịch làm này không?")) {
       try {
-        await axios.delete(`${API_URL}/WorkSchedule/${id}`);
+        await axiosInstance.delete(`/WorkSchedule/${id}`);
         alert("Xóa lịch làm thành công!");
         fetchSchedules();
       } catch (err) {

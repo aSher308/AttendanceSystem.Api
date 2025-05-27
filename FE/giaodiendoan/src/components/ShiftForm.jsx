@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance"; // import axiosInstance đã config sẵn token
 import { API_URL } from "../config";
 import "../styles/style.css";
 
@@ -13,14 +13,14 @@ const ShiftForm = () => {
     endHour: "17",
     endMinute: "00",
     endSecond: "00",
-    isActive: true, // Luôn true
+    isActive: true,
     description: "",
   });
   const [updateId, setUpdateId] = useState(null);
 
   const fetchShifts = async () => {
     try {
-      const res = await axios.get(`${API_URL}/Shift`);
+      const res = await axiosInstance.get(`${API_URL}/Shift`);
       setShifts(res.data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách ca làm:", err);
@@ -33,7 +33,6 @@ const ShiftForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // Loại bỏ isActive khỏi xử lý onChange vì luôn true
     if (name === "isActive") return;
 
     setFormData((prev) => ({
@@ -62,16 +61,19 @@ const ShiftForm = () => {
       name: formData.name,
       startTime,
       endTime,
-      isActive: true, // Luôn gửi true
+      isActive: true,
       description: formData.description || null,
     };
 
     try {
       if (updateId) {
-        await axios.put(`${API_URL}/Shift`, { id: updateId, ...dataToSend });
+        await axiosInstance.put(`${API_URL}/Shift`, {
+          id: updateId,
+          ...dataToSend,
+        });
         alert("Cập nhật ca làm thành công!");
       } else {
-        await axios.post(`${API_URL}/Shift`, dataToSend);
+        await axiosInstance.post(`${API_URL}/Shift`, dataToSend);
         alert("Tạo ca làm thành công!");
       }
 
@@ -105,7 +107,7 @@ const ShiftForm = () => {
       endHour: eHour,
       endMinute: eMin,
       endSecond: eSec,
-      isActive: true, // Luôn true
+      isActive: true,
       description: shift.description || "",
     });
     setUpdateId(shift.id);
@@ -114,7 +116,7 @@ const ShiftForm = () => {
   const handleDelete = async (id) => {
     if (confirm("Bạn có chắc muốn xóa ca làm này?")) {
       try {
-        await axios.delete(`${API_URL}/Shift/${id}`);
+        await axiosInstance.delete(`${API_URL}/Shift/${id}`);
         alert("Đã xóa ca làm!");
         fetchShifts();
       } catch (err) {
@@ -125,9 +127,7 @@ const ShiftForm = () => {
 
   const toggleStatus = async (id, currentStatus) => {
     try {
-      // Nếu bạn muốn luôn giữ isActive = true, có thể bỏ qua toggle
-      // Hoặc nếu vẫn muốn toggle trạng thái thì giữ nguyên
-      await axios.patch(
+      await axiosInstance.patch(
         `${API_URL}/Shift/${id}/status?isActive=${!currentStatus}`
       );
       alert("Cập nhật trạng thái thành công!");
@@ -229,7 +229,6 @@ const ShiftForm = () => {
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
-        {/* Ẩn checkbox bằng input hidden giữ giá trị true */}
         <input type="hidden" name="isActive" value={true} />
         <button
           type="submit"

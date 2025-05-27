@@ -31,7 +31,7 @@ function LoginForm() {
       localStorage.setItem("userRoles", JSON.stringify([response.data.role])); // ✅ Ghi đúng dạng mảng
 
       // ✅ Điều hướng sau khi đăng nhập thành công
-      navigate("/layout");
+      navigate("/layout/home");
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
       setMessage(error.response?.data || "Sai tài khoản hoặc mật khẩu");

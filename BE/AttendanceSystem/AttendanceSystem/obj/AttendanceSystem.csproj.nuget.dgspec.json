@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj": {}
+    "C:\\Users\\vu484\\Desktop\\25_5\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj": {
+    "C:\\Users\\vu484\\Desktop\\25_5\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
+        "projectUniqueName": "C:\\Users\\vu484\\Desktop\\25_5\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
         "projectName": "AttendanceSystem",
-        "projectPath": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
+        "projectPath": "C:\\Users\\vu484\\Desktop\\25_5\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\AttendanceSystem.csproj",
         "packagesPath": "C:\\Users\\vu484\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\vu484\\Desktop\\Clone\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\obj\\",
+        "outputPath": "C:\\Users\\vu484\\Desktop\\25_5\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

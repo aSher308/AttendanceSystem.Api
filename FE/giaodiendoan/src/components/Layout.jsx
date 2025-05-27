@@ -12,19 +12,30 @@ const ACCOUNT_API = `${API_URL}/Account`;
 export default function Layout() {
   const navigate = useNavigate();
   const [userRoles, setUserRoles] = useState([]);
+  const [fullName, setFullName] = useState("");
 
   // Load roles khi component mount
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
     const roles = JSON.parse(localStorage.getItem("userRoles") || "[]");
-    //localStorage.setItem("userRoles", JSON.stringify([response.data.role]));
-    setUserRoles(roles); // Gán toàn bộ roles
-  }, []);
+    const name = localStorage.getItem("fullName") || "";
+
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+
+    setUserRoles(roles);
+    setFullName(name);
+  }, [navigate]);
 
   const handleLogout = async () => {
     try {
       await axios.post(`${ACCOUNT_API}/logout`, {}, { withCredentials: true });
       localStorage.removeItem("userToken");
       localStorage.removeItem("userRoles");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("fullName"); //Chú ý
       navigate("/login");
     } catch (error) {
       alert("Lỗi khi đăng xuất: " + (error.response?.data || "Không rõ lỗi"));
@@ -37,9 +48,7 @@ export default function Layout() {
       <header className="app-header">
         <h1 className="app-title">Trang web chấm công online</h1>
         <div className="user-info">
-          {userRoles.includes("Admin") && (
-            <span className="admin-badge">ADMIN</span>
-          )}
+          {userRoles.includes("Admin") && <span>{fullName}</span>}
         </div>
         <div
           className="logout-section"
@@ -96,7 +105,7 @@ export default function Layout() {
             {userRoles.includes("Admin") && (
               <>
                 <li className="nav-item">
-                  <Link to="/employee-management" className="nav-link">
+                  <Link to="QuanLyNhanVien" className="nav-link">
                     Quản lý nhân viên
                   </Link>
                 </li>

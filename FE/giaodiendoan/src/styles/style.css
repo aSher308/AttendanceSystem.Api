@@ -1133,3 +1133,131 @@ body {
     overflow-x: auto;
   }
 }
+
+/* ##################### */
+/* Quản lý nhân viên form - Phiên bản phù hợp với Tailwind */
+.quan-ly-nhan-vien-container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin: 1rem auto;
+  max-width: 1200px;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Tùy chỉnh lại các phần tử cụ thể để không bị ghi đè bởi Tailwind */
+.quan-ly-nhan-vien-container h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.75rem;
+}
+
+/* Cải thiện input và select để phù hợp với thiết kế */
+.quan-ly-nhan-vien-container input[type="text"],
+.quan-ly-nhan-vien-container select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.quan-ly-nhan-vien-container input[type="text"]:focus,
+.quan-ly-nhan-vien-container select:focus {
+  outline: none;
+  border-color: #2980b9;
+}
+
+/* Nút tìm kiếm */
+.quan-ly-nhan-vien-container button.bg-blue-500 {
+  background-color: #2980b9 !important;
+  transition: background-color 0.3s;
+}
+
+.quan-ly-nhan-vien-container button.bg-blue-500:hover {
+  background-color: #1c6ea4 !important;
+}
+
+/* Bảng */
+.quan-ly-nhan-vien-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.quan-ly-nhan-vien-container table th {
+  background-color: #34495e !important;
+  color: white !important;
+  padding: 1rem !important;
+  text-align: left;
+  font-weight: 500;
+}
+
+.quan-ly-nhan-vien-container table td {
+  padding: 1rem !important;
+  border-bottom: 1px solid #eee !important;
+  vertical-align: middle;
+}
+
+.quan-ly-nhan-vien-container table tr:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Nút hành động */
+.quan-ly-nhan-vien-container .text-blue-500 {
+  color: #3498db !important;
+  transition: color 0.2s;
+}
+
+.quan-ly-nhan-vien-container .text-blue-500:hover {
+  color: #2980b9 !important;
+  text-decoration: none !important;
+}
+
+.quan-ly-nhan-vien-container .text-red-500 {
+  color: #e74c3c !important;
+  transition: color 0.2s;
+}
+
+.quan-ly-nhan-vien-container .text-red-500:hover {
+  color: #c0392b !important;
+  text-decoration: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .quan-ly-nhan-vien-container {
+    padding: 1rem;
+  }
+
+  .quan-ly-nhan-vien-container .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .quan-ly-nhan-vien-container table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .quan-ly-nhan-vien-container .space-x-2 > * + * {
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+    display: block;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
