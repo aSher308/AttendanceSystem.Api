@@ -1,5 +1,6 @@
 ﻿using AttendanceSystem.Attributes;
 using AttendanceSystem.DTOs;
+using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,11 @@ namespace AttendanceSystem.Controllers
     public class OvertimeRequestController : ControllerBase
     {
         private readonly IOvertimeRequestService _service;
-
-        public OvertimeRequestController(IOvertimeRequestService service)
+        private readonly IAccountService _accountService;
+        public OvertimeRequestController(IOvertimeRequestService service, IAccountService accountService)
         {
             _service = service;
+            _accountService = accountService;
         }
 
         // Tạo yêu cầu tăng ca (user)
@@ -61,6 +63,17 @@ namespace AttendanceSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? userId, DateTime? from, DateTime? to, string? status)
         {
+            var currentUserId = HttpContext.Session.GetInt32("UserId");
+            if (currentUserId == null)
+                return Unauthorized("Chưa đăng nhập");
+
+            bool isAdmin = await _accountService.IsAdminAsync(currentUserId.Value);
+
+            if (!isAdmin)
+            {
+                userId = currentUserId.Value;
+            }
+
             var data = await _service.GetAllAsync(userId, from, to, status);
             return Ok(data);
         }

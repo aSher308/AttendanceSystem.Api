@@ -170,6 +170,22 @@ namespace AttendanceSystem.Controllers
             var stream = new MemoryStream(package.GetAsByteArray());
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "users.xlsx");
         }
+        // Xóa nhân viên
+        [HttpDelete("{id}")]
+        [RequireRole("Admin")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _userService.DeleteAsync(id);
+            return result ? Ok("Đã xóa người dùng") : NotFound("Người dùng không tồn tại");
+        }
+        // Xóa vai trò của người dùng
+        [HttpDelete("{id}/remove-role")]
+        [RequireRole("Admin")]
+        public async Task<IActionResult> RemoveRole(int id, [FromQuery] int roleId)
+        {
+            var result = await _userService.RemoveRoleAsync(id, roleId);
+            return result ? Ok("Đã xóa vai trò khỏi người dùng") : BadRequest("Xóa vai trò thất bại");
+        }
 
     }
 }

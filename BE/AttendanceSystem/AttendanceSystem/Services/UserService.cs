@@ -275,6 +275,26 @@ namespace AttendanceSystem.Services
                 .Select(ur => ur.Role.Name)
                 .ToListAsync();
         }
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return false;
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> RemoveRoleAsync(int userId, int roleId)
+        {
+            var userRole = await _context.UserRoles
+                .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId);
+
+            if (userRole == null) return false;
+
+            _context.UserRoles.Remove(userRole);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
     }
 }

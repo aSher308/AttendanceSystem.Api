@@ -40,5 +40,8 @@ namespace AttendanceSystem.Services.Interfaces
 
         //
         Task<List<string>> GetRolesOfUser(int userId);
+        Task<bool> DeleteAsync(int id);
+        Task<bool> RemoveRoleAsync(int userId, int roleId);
+
     }
 }
