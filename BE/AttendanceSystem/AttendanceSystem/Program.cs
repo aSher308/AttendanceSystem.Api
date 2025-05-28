@@ -1,5 +1,7 @@
 ﻿using AttendanceSystem.Data;
+using AttendanceSystem.Interfaces;
 using AttendanceSystem.Middleware;
+using AttendanceSystem.Middlewares;
 using AttendanceSystem.Services;
 using AttendanceSystem.Services.Interfaces;
 using Hangfire;
@@ -81,7 +83,7 @@ using (var scope = app.Services.CreateScope())
 
 // ---------------------- MIDDLEWARE PIPELINE ----------------------
 app.UseErrorHandling();
-app.UseMiddleware<ActivityLogApiMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -97,7 +99,7 @@ app.UseCors("AllowFrontend");
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<AutoActivityLogMiddleware>();
 app.UseHangfireDashboard();
 
 app.MapControllers();

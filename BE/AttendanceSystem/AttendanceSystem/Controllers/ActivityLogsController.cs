@@ -1,47 +1,91 @@
-﻿// Controllers/ActivityLogsController.cs
-using AttendanceSystem.Attributes;
-using AttendanceSystem.Models.DTOs;
-using AttendanceSystem.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using AttendanceSystem.Data;
+using AttendanceSystem.DTOs;
+using AttendanceSystem.Interfaces;
+using AttendanceSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AttendanceSystem.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    [RequireRole("Admin")]
+    [ApiController]
     public class ActivityLogsController : ControllerBase
     {
-        private readonly IActivityLogService _logService;
+        private readonly IActivityLogService _activityLogService;
+        private readonly AppDbContext _context;
 
-        public ActivityLogsController(IActivityLogService logService)
+        public ActivityLogsController(
+            IActivityLogService activityLogService,
+            AppDbContext context)
         {
-            _logService = logService;
+            _activityLogService = activityLogService;
+            _context = context;
         }
 
+        // GET: api/activitylogs
         [HttpGet]
-        public async Task<ActionResult<PagedResult<ActivityLogDto>>> GetPaged(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] DateTime? fromDate = null,
-            [FromQuery] DateTime? toDate = null,
-            [FromQuery] int? userId = null)
+        public async Task<ActionResult<IEnumerable<ActivityLogDTO>>> GetActivityLogs(
+            [FromQuery] int? userId,
+            [FromQuery] string? action,
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate)
         {
-            var result = await _logService.GetPagedLogsAsync(pageNumber, pageSize, fromDate, toDate, userId);
-            return Ok(result);
+            var query = _context.ActivityLogs
+                .Include(l => l.User)
+                .AsQueryable();
+
+            // Filter by user
+            if (userId.HasValue)
+                query = query.Where(l => l.UserId == userId.Value);
+
+            // Filter by action
+            if (!string.IsNullOrEmpty(action))
+                query = query.Where(l => l.Action.Contains(action));
+
+            // Filter by date range
+            if (fromDate.HasValue)
+                query = query.Where(l => l.Timestamp >= fromDate.Value);
+
+            if (toDate.HasValue)
+                query = query.Where(l => l.Timestamp <= toDate.Value);
+
+            var logs = await query
+                .OrderByDescending(l => l.Timestamp)
+                .Select(l => new ActivityLogDTO
+                {
+                    Id = l.Id,
+                    UserId = l.UserId,
+                    UserName = l.User.FullName,
+                    Action = l.Action,
+                    Description = l.Description,
+                    Timestamp = l.Timestamp,
+                    IPAddress = l.IPAddress,
+                    DeviceInfo = l.DeviceInfo
+                })
+                .ToListAsync();
+
+            return Ok(logs);
         }
 
-        [HttpGet("export")]
-        public async Task<IActionResult> ExportExcel(
-            [FromQuery] DateTime? fromDate = null,
-            [FromQuery] DateTime? toDate = null)
+
+        // DELETE: api/activitylogs/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteActivityLog(int id)
         {
-            var excelBytes = await _logService.ExportExcelAsync(fromDate, toDate);
-            return File(excelBytes,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                $"ActivityLogs_{DateTime.Now:yyyyMMdd}.xlsx");
+            var log = await _context.ActivityLogs.FindAsync(id);
+            if (log == null)
+            {
+                return NotFound();
+            }
+
+            _context.ActivityLogs.Remove(log);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

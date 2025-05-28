@@ -225,21 +225,18 @@
         ],
         "parameters": [
           {
-            "name": "pageNumber",
+            "name": "userId",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32",
-              "default": 1
+              "format": "int32"
             }
           },
           {
-            "name": "pageSize",
+            "name": "action",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
+              "type": "string"
             }
           },
           {
@@ -256,14 +253,6 @@
             "schema": {
               "type": "string",
               "format": "date-time"
-            }
-          },
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
             }
           }
         ],
@@ -273,17 +262,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ActivityLogDtoPagedResult"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityLogDTO"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ActivityLogDtoPagedResult"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityLogDTO"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ActivityLogDtoPagedResult"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityLogDTO"
+                  }
                 }
               }
             }
@@ -291,26 +289,19 @@
         }
       }
     },
-    "/api/ActivityLogs/export": {
-      "get": {
+    "/api/ActivityLogs/{id}": {
+      "delete": {
         "tags": [
           "ActivityLogs"
         ],
         "parameters": [
           {
-            "name": "fromDate",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "toDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -1753,6 +1744,60 @@
         }
       }
     },
+    "/api/User/{id}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/{id}/remove-role": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "roleId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/WorkSchedule": {
       "get": {
         "tags": [
@@ -1883,16 +1928,16 @@
   },
   "components": {
     "schemas": {
-      "ActivityLogDto": {
+      "ActivityLogDTO": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
+          "userId": {
+            "type": "integer",
+            "format": "int32"
           },
           "userName": {
             "type": "string",
@@ -1906,6 +1951,10 @@
             "type": "string",
             "nullable": true
           },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
           "ipAddress": {
             "type": "string",
             "nullable": true
@@ -1913,31 +1962,6 @@
           "deviceInfo": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ActivityLogDtoPagedResult": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ActivityLogDto"
-            },
-            "nullable": true
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false

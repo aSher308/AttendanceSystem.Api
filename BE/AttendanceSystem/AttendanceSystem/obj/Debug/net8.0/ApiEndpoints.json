@@ -127,20 +127,20 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.ActivityLogsController",
-    "Method": "GetPaged",
+    "Method": "GetActivityLogs",
     "RelativePath": "api/ActivityLogs",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
+        "Name": "userId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
-        "Name": "pageSize",
-        "Type": "System.Int32",
+        "Name": "action",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -152,16 +152,11 @@
         "Name": "toDate",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
-      },
-      {
-        "Name": "userId",
-        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "AttendanceSystem.Models.DTOs.PagedResult\u00601[[AttendanceSystem.Models.DTOs.ActivityLogDto, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[AttendanceSystem.DTOs.ActivityLogDTO, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -173,21 +168,16 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.ActivityLogsController",
-    "Method": "ExportExcel",
-    "RelativePath": "api/ActivityLogs/export",
-    "HttpMethod": "GET",
+    "Method": "DeleteActivityLog",
+    "RelativePath": "api/ActivityLogs/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "fromDate",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "toDate",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -943,6 +933,22 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.UserController",
     "Method": "AssignRole",
     "RelativePath": "api/User/{id}/assign-role",
     "HttpMethod": "POST",
@@ -958,6 +964,27 @@
         "Name": "roleId",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.UserController",
+    "Method": "RemoveRole",
+    "RelativePath": "api/User/{id}/remove-role",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "roleId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
