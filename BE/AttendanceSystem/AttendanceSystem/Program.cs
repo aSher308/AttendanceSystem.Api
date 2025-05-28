@@ -5,6 +5,7 @@ using AttendanceSystem.Services.Interfaces;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,9 +80,17 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers(); //Lưu ý
+//test
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
+
+
 
 // ---------------------- SEED DATABASE ----------------------
 using (var scope = app.Services.CreateScope())

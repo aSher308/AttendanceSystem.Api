@@ -16,12 +16,18 @@ namespace AttendanceSystem.Controllers
         public AttendanceController(IAttendanceService attendanceService)
         {
             _attendanceService = attendanceService;
+
         }
         // Check-in
         [HttpPost("check-in")]
         [RequireRole("User")]
         public async Task<IActionResult> CheckIn([FromBody] AttendanceCheckInRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var result = await _attendanceService.CheckInAsync(request);
             return Ok(result);
         }

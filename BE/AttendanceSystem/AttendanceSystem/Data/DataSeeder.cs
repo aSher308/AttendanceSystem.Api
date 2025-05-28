@@ -122,6 +122,14 @@ namespace AttendanceSystem.Data
                     },
                     new Location
                     {
+                        Name = "Nhà Vũ",
+                        Latitude = 10.867265185460893,
+                        Longitude = 106.96549095594966,
+                        RadiusInMeters = 100,
+                        IsDefault = false
+                    },
+                    new Location
+                    {
                         Name = "Nhà tôi",
                         Latitude = 10.884845,
                         Longitude = 106.784789,

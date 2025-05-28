@@ -3,8 +3,8 @@ import { API_URL } from "../config";
 import "../styles/style.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
+import axiosInstance from "../utils/axiosInstance";
 
-// Fix icon mặc định Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -25,7 +25,14 @@ const TimekeepingForm = () => {
   const [checkInMethod, setCheckInMethod] = useState("GPS");
   const [showMap, setShowMap] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const [cameraMode, setCameraMode] = useState(null); // 'qr' hoặc 'face'
+  const [cameraMode, setCameraMode] = useState(null);
+
+  // Hàm dùng biến cameraMode để tránh lỗi unused variable
+  const useCameraModePlaceholder = () => {
+    void cameraMode;
+  };
+  useCameraModePlaceholder();
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -48,10 +55,11 @@ const TimekeepingForm = () => {
           setLatitude(pos.coords.latitude);
           setLongitude(pos.coords.longitude);
           setShowMap(true);
+          setMessage("Lấy vị trí thành công!");
         },
         (err) => {
           console.error("Lỗi lấy vị trí:", err.message);
-          setMessage("Không thể lấy vị trí của bạn.");
+          setMessage(`Không thể lấy vị trí: ${err.message}`);
         }
       );
     } else {
@@ -75,9 +83,7 @@ const TimekeepingForm = () => {
       }
     } catch (err) {
       console.error("Lỗi khi truy cập camera:", err);
-      setMessage(
-        "Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập."
-      );
+      setMessage(`Không thể truy cập camera: ${err.message}`);
     }
   };
 
@@ -100,112 +106,79 @@ const TimekeepingForm = () => {
       setPhotoUrl(photoDataUrl);
       setMessage("Đã chụp ảnh thành công!");
       stopCamera();
-
-      // Ở đây có thể thêm logic xử lý QR code hoặc nhận diện khuôn mặt
-      if (cameraMode === "qr") {
-        // Xử lý QR code
-        // processQRCode(photoDataUrl);
-      } else {
-        // Xử lý nhận diện khuôn mặt
-        // processFaceRecognition(photoDataUrl);
-      }
     }
   };
 
   const mapToAttendanceType = () => {
-    if (workLocation === "Remote") {
-      return 2; // FaceRecognition cho làm từ xa
-    }
-
-    // Cho làm tại văn phòng
-    switch (checkInMethod) {
-      case "QR":
-        return 1;
-      case "GPS":
-        return 0;
-      default:
-        return 0;
-    }
+    if (workLocation === "Remote") return 2;
+    return checkInMethod === "QR" ? 1 : 0;
   };
 
   const handleCheckIn = async () => {
-    if (checkInMethod === "GPS" && (latitude == null || longitude == null)) {
-      setMessage("Vui lòng lấy vị trí trước khi chấm công.");
-      return;
-    }
-
-    if ((checkInMethod === "QR" || workLocation === "Remote") && !photoUrl) {
-      setMessage("Vui lòng chụp ảnh xác thực trước khi chấm công.");
-      return;
-    }
-
-    // Chuyển latitude và longitude về number hoặc null (backend có thể xử lý nullable)
-    const lat = latitude !== null ? Number(latitude) : null;
-    const lng = longitude !== null ? Number(longitude) : null;
-
-    // Kiểm tra giá trị number hợp lệ
-    if (checkInMethod === "GPS" && (isNaN(lat) || isNaN(lng))) {
-      setMessage("Vị trí không hợp lệ.");
-      return;
-    }
-
-    const dataToSend = {
-      userId,
-      locationName: locationName || null, // gửi null nếu rỗng
-      deviceInfo,
-      latitude: lat,
-      longitude: lng,
-      photoUrl: photoUrl || null,
-      attendanceType: mapToAttendanceType(),
-    };
-
-    console.log("Sending data:", dataToSend);
-
     try {
-      const response = await fetch(`${API_URL}/Attendance/check-in`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSend),
-      });
+      console.log("Bắt đầu quá trình check-in");
 
-      const responseText = await response.text();
-
-      if (!response.ok) {
-        // Hiển thị lỗi chi tiết từ backend
-        setMessage(`Lỗi server: ${response.status} - ${responseText}`);
-        return;
+      // Validate dữ liệu
+      if (checkInMethod === "GPS" && (latitude == null || longitude == null)) {
+        throw new Error("Vui lòng lấy vị trí trước khi chấm công");
       }
 
-      setMessage(responseText);
-    } catch (err) {
-      console.error(err);
-      setMessage("Lỗi kết nối server khi chấm công vào");
+      if ((checkInMethod === "QR" || workLocation === "Remote") && !photoUrl) {
+        throw new Error("Vui lòng chụp ảnh xác thực trước khi chấm công");
+      }
+
+      const dataToSend = {
+        userId,
+        locationName: locationName || "Không xác định",
+        deviceInfo,
+        latitude: latitude !== null ? Number(latitude) : null,
+        longitude: longitude !== null ? Number(longitude) : null,
+        photoUrl: photoUrl || null,
+        attendanceType: mapToAttendanceType(),
+      };
+
+      console.log("Dữ liệu gửi đi:", dataToSend);
+
+      // Sử dụng axiosInstance thay vì fetch
+      const response = await axiosInstance.post(
+        "/Attendance/check-in",
+        dataToSend
+      );
+
+      console.log("Phản hồi từ server:", response.data);
+      setMessage(response.data.message || "Check-in thành công!");
+    } catch (error) {
+      console.error("Lỗi khi check-in:", error);
+      setMessage(
+        error.response?.data?.message ||
+          error.message ||
+          "Lỗi khi thực hiện check-in"
+      );
     }
   };
 
   const handleCheckOut = async () => {
-    if (latitude == null || longitude == null) {
-      setMessage("Vui lòng lấy vị trí trước khi chấm công.");
-      return;
-    }
     try {
-      const response = await fetch(`${API_URL}/Attendance/check-out`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          deviceInfo,
-          latitude,
-          longitude,
-          photoUrl,
-        }),
+      if (latitude == null || longitude == null) {
+        throw new Error("Vui lòng lấy vị trí trước khi chấm công");
+      }
+
+      const response = await axiosInstance.post("/Attendance/check-out", {
+        userId,
+        deviceInfo,
+        latitude,
+        longitude,
+        photoUrl: photoUrl || null,
       });
 
-      const data = await response.text();
-      setMessage(data);
-    } catch (err) {
-      console.error(err);
-      setMessage("Lỗi kết nối server khi chấm công ra");
+      setMessage(response.data.message || "Check-out thành công!");
+    } catch (error) {
+      console.error("Lỗi khi check-out:", error);
+      setMessage(
+        error.response?.data?.message ||
+          error.message ||
+          "Lỗi khi thực hiện check-out"
+      );
     }
   };
 
@@ -316,14 +289,32 @@ const TimekeepingForm = () => {
         </>
       )}
 
-      <button className="btn btn-success me-2" onClick={handleCheckIn}>
-        Check-in
-      </button>
-      <button className="btn btn-danger" onClick={handleCheckOut}>
-        Check-out
-      </button>
+      <div className="action-buttons">
+        <button
+          className="btn btn-success me-2"
+          onClick={handleCheckIn}
+          id="checkInButton" // Thêm ID để dễ debug
+        >
+          Check-in
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={handleCheckOut}
+          id="checkOutButton" // Thêm ID để dễ debug
+        >
+          Check-out
+        </button>
+      </div>
 
-      {message && <div className="alert alert-info mt-3">{message}</div>}
+      {message && (
+        <div
+          className={`alert ${
+            message.includes("thành công") ? "alert-success" : "alert-danger"
+          } mt-3`}
+        >
+          {message}
+        </div>
+      )}
     </div>
   );
 };

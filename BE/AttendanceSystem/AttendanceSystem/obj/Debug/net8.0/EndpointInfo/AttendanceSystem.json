@@ -1921,25 +1921,23 @@
       },
       "AttendanceStatus": {
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
+          "OnTime",
+          "Late",
+          "Absent",
+          "LeaveEarly",
+          "Pending"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "AttendanceType": {
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
+          "GPS",
+          "QR",
+          "FaceRecognition",
+          "Manual",
+          "None"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "AttendanceUpdateRequest": {
         "type": "object",
@@ -2125,14 +2123,13 @@
       },
       "LeaveType": {
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
+          "PaidLeave",
+          "SickLeave",
+          "UnpaidLeave",
+          "RemoteWork",
+          "Other"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "LocationCreateRequest": {
         "type": "object",
@@ -2269,12 +2266,11 @@
       },
       "RequestStatus": {
         "enum": [
-          0,
-          1,
-          2
+          "Pending",
+          "Approved",
+          "Rejected"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "string"
       },
       "ResetPasswordRequest": {
         "type": "object",
