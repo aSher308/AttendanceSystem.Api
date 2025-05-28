@@ -22,6 +22,9 @@ namespace AttendanceSystem.Data
         {
             if (!await context.Users.AnyAsync(u => u.Email == "manhcuucon@gmail.com"))
             {
+                // Lấy department đầu tiên (Ban Giám đốc)
+                var adminDepartment = await context.Departments.FirstOrDefaultAsync(d => d.Name == "Ban Giám đốc");
+
                 var adminUser = new User
                 {
                     FullName = "Administrator",
@@ -31,8 +34,9 @@ namespace AttendanceSystem.Data
                     LeaveBalance = 30,
                     IsEmailConfirmed = true,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = VietnamTimeHelper.Now,
+                    UpdatedAt = VietnamTimeHelper.Now,
+                    DepartmentId = adminDepartment?.Id // Gán department nếu tồn tại
                 };
 
                 context.Users.Add(adminUser);
@@ -127,6 +131,61 @@ namespace AttendanceSystem.Data
                 };
 
                 context.Locations.AddRange(locations);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public static async Task SeedDepartmentsAsync(AppDbContext context)
+        {
+            if (!await context.Departments.AnyAsync())
+            {
+                var departments = new List<Department>
+        {
+            new Department
+            {
+                Name = "Ban Giám đốc",
+                Description = "Phòng ban quản lý cấp cao nhất",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            },
+            new Department
+            {
+                Name = "Phòng Nhân sự",
+                Description = "Quản lý nhân sự, tuyển dụng, đào tạo",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            },
+            new Department
+            {
+                Name = "Phòng Kế toán",
+                Description = "Quản lý tài chính, kế toán doanh nghiệp",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            },
+            new Department
+            {
+                Name = "Phòng Kỹ thuật",
+                Description = "Phát triển và bảo trì hệ thống công nghệ",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            },
+            new Department
+            {
+                Name = "Phòng Kinh doanh",
+                Description = "Phụ trách hoạt động kinh doanh và sales",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            },
+            new Department
+            {
+                Name = "Phòng Marketing",
+                Description = "Quảng bá thương hiệu và sản phẩm",
+                CreatedAt = VietnamTimeHelper.Now,
+                UpdatedAt = VietnamTimeHelper.Now
+            }
+        };
+
+                await context.Departments.AddRangeAsync(departments);
                 await context.SaveChangesAsync();
             }
         }

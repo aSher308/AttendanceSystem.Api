@@ -10,7 +10,6 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        private readonly INotificationService _notificationService;
         public OvertimeRequestService(AppDbContext context, IEmailService emailService)
         {
             _context = context;

@@ -1,4 +1,5 @@
-﻿using AttendanceSystem.DTOs;
+﻿using AttendanceSystem.Attributes;
+using AttendanceSystem.DTOs;
 using AttendanceSystem.Models;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace AttendanceSystem.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [RequireRole("User", "Admin")]
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;
@@ -17,6 +19,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var locations = await _locationService.GetAllAsync();
@@ -24,6 +27,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("{id}")]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var location = await _locationService.GetByIdAsync(id);
@@ -32,6 +36,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpPost]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Create([FromBody] LocationCreateRequest request)
         {
             if (!ModelState.IsValid)
@@ -42,6 +47,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpPut("{id}")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] LocationUpdateRequest request)
         {
             if (id != request.Id)
@@ -58,6 +64,7 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpDelete("{id}")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _locationService.DeleteAsync(id);

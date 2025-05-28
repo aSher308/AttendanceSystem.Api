@@ -10,7 +10,6 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        private readonly INotificationService _notificationService;
 
         public LeaveRequestService(AppDbContext context, IEmailService emailService)
         {

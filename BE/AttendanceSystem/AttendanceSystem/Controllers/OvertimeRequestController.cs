@@ -7,6 +7,7 @@ namespace AttendanceSystem.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [RequireRole("User", "Admin")]
     public class OvertimeRequestController : ControllerBase
     {
         private readonly IOvertimeRequestService _service;

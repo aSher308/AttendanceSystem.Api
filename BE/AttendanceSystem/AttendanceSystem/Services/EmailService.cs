@@ -31,7 +31,7 @@ namespace AttendanceSystem.Services
 
             var message = new MailMessage(fromEmail, to, subject, body)
             {
-                IsBodyHtml = false
+                IsBodyHtml = true
             };
 
             await client.SendMailAsync(message);
