@@ -168,18 +168,28 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.ActivityLogsController",
-    "Method": "DeleteActivityLog",
-    "RelativePath": "api/ActivityLogs/{id}",
+    "Method": "DeleteOldLogs",
+    "RelativePath": "api/ActivityLogs/cleanup",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "weeks",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.ActivityLogsController",
+    "Method": "ExportToExcel",
+    "RelativePath": "api/ActivityLogs/export-excel",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

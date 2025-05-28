@@ -72,20 +72,43 @@ namespace AttendanceSystem.Controllers
         }
 
 
-        // DELETE: api/activitylogs/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteActivityLog(int id)
+        // DELETE: api/activitylogs/cleanup?weeks=4
+        [HttpDelete("cleanup")]
+        public async Task<IActionResult> DeleteOldLogs([FromQuery] int weeks = 4)
         {
-            var log = await _context.ActivityLogs.FindAsync(id);
-            if (log == null)
+            if (weeks <= 0)
             {
-                return NotFound();
+                return BadRequest("Số tuần phải lớn hơn 0");
             }
 
-            _context.ActivityLogs.Remove(log);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var deletedCount = await _activityLogService.DeleteOldLogsAsync(weeks);
+                return Ok(new
+                {
+                    Message = $"Đã xóa {deletedCount} bản ghi cũ hơn {weeks} tuần",
+                    DeletedCount = deletedCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Lỗi khi xóa log cũ",
+                    Details = ex.Message
+                });
+            }
+        }
 
-            return NoContent();
+        [HttpGet("export-excel")]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var fileBytes = await _activityLogService.ExportActivityLogsToExcelAsync();
+            var fileName = $"ActivityLogs_{DateTime.Now:yyyyMMdd}.xlsx";
+
+            return File(fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName);
         }
     }
 }

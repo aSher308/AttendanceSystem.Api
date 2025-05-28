@@ -289,21 +289,33 @@
         }
       }
     },
-    "/api/ActivityLogs/{id}": {
+    "/api/ActivityLogs/cleanup": {
       "delete": {
         "tags": [
           "ActivityLogs"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "weeks",
+            "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 4
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ActivityLogs/export-excel": {
+      "get": {
+        "tags": [
+          "ActivityLogs"
         ],
         "responses": {
           "200": {
