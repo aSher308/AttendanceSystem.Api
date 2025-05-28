@@ -1,4 +1,5 @@
-﻿using AttendanceSystem.Data;
+﻿using AttendanceSystem.Attributes;
+using AttendanceSystem.Data;
 using AttendanceSystem.DTOs;
 using AttendanceSystem.Interfaces;
 using AttendanceSystem.Models;
@@ -13,6 +14,7 @@ namespace AttendanceSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [RequireRole("Admin")]
     public class ActivityLogsController : ControllerBase
     {
         private readonly IActivityLogService _activityLogService;
@@ -28,6 +30,7 @@ namespace AttendanceSystem.Controllers
 
         // GET: api/activitylogs
         [HttpGet]
+        [RequireRole("Admin")]
         public async Task<ActionResult<IEnumerable<ActivityLogDTO>>> GetActivityLogs(
             [FromQuery] int? userId,
             [FromQuery] string? action,
@@ -74,6 +77,7 @@ namespace AttendanceSystem.Controllers
 
         // DELETE: api/activitylogs/cleanup?weeks=4
         [HttpDelete("cleanup")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> DeleteOldLogs([FromQuery] int weeks = 4)
         {
             if (weeks <= 0)
@@ -101,10 +105,11 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("export-excel")]
+        [RequireRole("Admin")]
         public async Task<IActionResult> ExportToExcel()
         {
             var fileBytes = await _activityLogService.ExportActivityLogsToExcelAsync();
-            var fileName = $"ActivityLogs_{DateTime.Now:yyyyMMdd}.xlsx";
+            var fileName = $"ActivityLogs_{VietnamTimeHelper.Now:yyyyMMdd}.xlsx";
 
             return File(fileBytes,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

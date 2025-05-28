@@ -31,7 +31,7 @@ namespace AttendanceSystem.Services
                     Description = logDto.Description,
                     IPAddress = logDto.IPAddress,
                     DeviceInfo = logDto.DeviceInfo,
-                    Timestamp = DateTime.UtcNow
+                    Timestamp = VietnamTimeHelper.Now
                 };
 
                 _context.ActivityLogs.Add(log);
@@ -44,7 +44,7 @@ namespace AttendanceSystem.Services
         }
         public async Task<int> DeleteOldLogsAsync(int weeksToKeep)
         {
-            var cutoffDate = DateTime.UtcNow.AddDays(-7 * weeksToKeep);
+            var cutoffDate = VietnamTimeHelper.Now.AddDays(-7 * weeksToKeep);
 
             var oldLogs = await _context.ActivityLogs
                 .Where(l => l.Timestamp < cutoffDate)
