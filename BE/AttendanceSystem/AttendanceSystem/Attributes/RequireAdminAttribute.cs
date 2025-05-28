@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics; // Thêm dòng này
 
 namespace AttendanceSystem.Attributes
 {
@@ -21,6 +22,8 @@ namespace AttendanceSystem.Attributes
             var db = services.GetRequiredService<AppDbContext>();
 
             var userId = httpContext.Session.GetInt32("UserId");
+            Debug.WriteLine($"[DEBUG] UserId trong session: {userId}"); // Log userId
+
             if (userId == null)
             {
                 context.Result = new UnauthorizedResult();
@@ -32,6 +35,8 @@ namespace AttendanceSystem.Attributes
                 .Where(ur => ur.UserId == userId)
                 .Select(ur => ur.Role.Name)
                 .ToListAsync();
+
+            Debug.WriteLine($"[DEBUG] UserId: {userId}, Roles: {string.Join(",", userRoles)}"); // Log roles
 
             if (!_roles.Any(role => userRoles.Contains(role)))
             {

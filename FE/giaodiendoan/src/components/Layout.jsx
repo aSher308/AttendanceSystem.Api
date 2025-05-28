@@ -76,22 +76,22 @@ export default function Layout() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/report" className="nav-link">
+              <Link to="leave-requests" className="nav-link">
                 Nghỉ phép
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/employee" className="nav-link">
+              <Link to="Shift" className="nav-link">
                 Ca làm việc
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/settings" className="nav-link">
+              <Link to="workSchedule" className="nav-link">
                 Lịch làm việc
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/settings" className="nav-link">
+              <Link to="Statistics" className="nav-link">
                 Báo cáo cá nhân
               </Link>
             </li>

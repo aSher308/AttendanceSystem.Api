@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../utils/axiosInstance"; // import axiosInstance đã config sẵn token
+import axiosInstance from "../utils/axiosInstance";
 import { API_URL } from "../config";
 import "../styles/style.css";
 
@@ -17,6 +17,10 @@ const ShiftForm = () => {
     description: "",
   });
   const [updateId, setUpdateId] = useState(null);
+
+  // Lấy role từ localStorage
+  const userRoles = JSON.parse(localStorage.getItem("userRoles") || "[]");
+  const isAdmin = userRoles.includes("Admin");
 
   const fetchShifts = async () => {
     try {
@@ -114,7 +118,7 @@ const ShiftForm = () => {
   };
 
   const handleDelete = async (id) => {
-    if (confirm("Bạn có chắc muốn xóa ca làm này?")) {
+    if (window.confirm("Bạn có chắc muốn xóa ca làm này?")) {
       try {
         await axiosInstance.delete(`${API_URL}/Shift/${id}`);
         alert("Đã xóa ca làm!");
@@ -149,94 +153,95 @@ const ShiftForm = () => {
 
   return (
     <div className="shift-form-container">
-      <h2 className="text-xl font-bold mb-4">
-        {updateId ? "Cập nhật" : "Tạo"} Ca Làm
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          name="name"
-          placeholder="Tên ca làm"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="w-full border p-2 rounded"
-        />
-        <label>Giờ bắt đầu:</label>
-        <div className="flex items-center space-x-1">
-          <select
-            name="startHour"
-            value={formData.startHour}
+      <h2 className="text-xl font-bold mb-4">Danh sách ca làm</h2>
+      {/* Chỉ admin mới được tạo/sửa ca làm */}
+      {isAdmin && (
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input
+            type="text"
+            name="name"
+            placeholder="Tên ca làm"
+            value={formData.name}
             onChange={handleChange}
-            className="border p-1 rounded"
-          >
-            {renderTimeOptions(24)}
-          </select>
-          <span>:</span>
-          <select
-            name="startMinute"
-            value={formData.startMinute}
+            required
+            className="w-full border p-2 rounded"
+          />
+          <label>Giờ bắt đầu:</label>
+          <div className="flex items-center space-x-1">
+            <select
+              name="startHour"
+              value={formData.startHour}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(24)}
+            </select>
+            <span>:</span>
+            <select
+              name="startMinute"
+              value={formData.startMinute}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(60)}
+            </select>
+            <span>:</span>
+            <select
+              name="startSecond"
+              value={formData.startSecond}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(60)}
+            </select>
+          </div>
+          <label>Giờ kết thúc:</label>
+          <div className="flex items-center space-x-1">
+            <select
+              name="endHour"
+              value={formData.endHour}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(24)}
+            </select>
+            <span>:</span>
+            <select
+              name="endMinute"
+              value={formData.endMinute}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(60)}
+            </select>
+            <span>:</span>
+            <select
+              name="endSecond"
+              value={formData.endSecond}
+              onChange={handleChange}
+              className="border p-1 rounded"
+            >
+              {renderTimeOptions(60)}
+            </select>
+          </div>{" "}
+          <br />
+          <input
+            type="text"
+            name="description"
+            placeholder="Mô tả (tùy chọn)"
+            value={formData.description}
             onChange={handleChange}
-            className="border p-1 rounded"
+            className="w-full border p-2 rounded"
+          />
+          <input type="hidden" name="isActive" value={true} />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            {renderTimeOptions(60)}
-          </select>
-          <span>:</span>
-          <select
-            name="startSecond"
-            value={formData.startSecond}
-            onChange={handleChange}
-            className="border p-1 rounded"
-          >
-            {renderTimeOptions(60)}
-          </select>
-        </div>
-        <label>Giờ kết thúc:</label>
-        <div className="flex items-center space-x-1">
-          <select
-            name="endHour"
-            value={formData.endHour}
-            onChange={handleChange}
-            className="border p-1 rounded"
-          >
-            {renderTimeOptions(24)}
-          </select>
-          <span>:</span>
-          <select
-            name="endMinute"
-            value={formData.endMinute}
-            onChange={handleChange}
-            className="border p-1 rounded"
-          >
-            {renderTimeOptions(60)}
-          </select>
-          <span>:</span>
-          <select
-            name="endSecond"
-            value={formData.endSecond}
-            onChange={handleChange}
-            className="border p-1 rounded"
-          >
-            {renderTimeOptions(60)}
-          </select>
-        </div>{" "}
-        <br />
-        <input
-          type="text"
-          name="description"
-          placeholder="Mô tả (tùy chọn)"
-          value={formData.description}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-        <input type="hidden" name="isActive" value={true} />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          {updateId ? "Cập nhật" : "Tạo"}
-        </button>
-      </form>
+            {updateId ? "Cập nhật" : "Tạo"}
+          </button>
+        </form>
+      )}
 
       <h3 className="text-lg font-semibold mt-8 mb-2">Danh sách ca làm</h3>
       <ul className="shift-list">
@@ -258,26 +263,29 @@ const ShiftForm = () => {
                 )}
               </p>
             </div>
-            <div className="shift-actions">
-              <button
-                onClick={() => handleEdit(shift)}
-                className="btn btn-edit"
-              >
-                Sửa
-              </button>
-              <button
-                onClick={() => handleDelete(shift.id)}
-                className="btn btn-delete"
-              >
-                Xóa
-              </button>
-              <button
-                onClick={() => toggleStatus(shift.id, shift.isActive)}
-                className="btn btn-toggle"
-              >
-                {shift.isActive ? "Tắt" : "Bật"}
-              </button>
-            </div>
+            {/* Chỉ admin mới có nút sửa/xóa/bật-tắt */}
+            {isAdmin && (
+              <div className="shift-actions">
+                <button
+                  onClick={() => handleEdit(shift)}
+                  className="btn btn-edit"
+                >
+                  Sửa
+                </button>
+                <button
+                  onClick={() => handleDelete(shift.id)}
+                  className="btn btn-delete"
+                >
+                  Xóa
+                </button>
+                <button
+                  onClick={() => toggleStatus(shift.id, shift.isActive)}
+                  className="btn btn-toggle"
+                >
+                  {shift.isActive ? "Tắt" : "Bật"}
+                </button>
+              </div>
+            )}
           </li>
         ))}
       </ul>

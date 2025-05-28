@@ -3,6 +3,10 @@ import axiosInstance from "../utils/axiosInstance";
 import "../styles/style.css";
 
 const WorkScheduleForm = () => {
+  // Lấy role từ localStorage
+  const userRoles = JSON.parse(localStorage.getItem("userRoles") || "[]");
+  const isAdmin = userRoles.includes("Admin");
+
   const [formData, setFormData] = useState({
     userId: "",
     shiftId: "",
@@ -61,9 +65,11 @@ const WorkScheduleForm = () => {
   }, [filterMonth, filterYear]);
 
   useEffect(() => {
-    fetchEmployees();
-    fetchShifts();
-  }, []);
+    if (isAdmin) {
+      fetchEmployees();
+      fetchShifts();
+    }
+  }, [isAdmin]);
 
   useEffect(() => {
     fetchSchedules();
@@ -149,107 +155,109 @@ const WorkScheduleForm = () => {
 
   return (
     <div className="work-schedule-container">
-      <h1 className="header">Quản lý lịch làm việc</h1>
+      <h1 className="header">Lịch làm việc</h1>
 
-      {/* Form tạo/cập nhật */}
-      <div className="form-section">
-        <h2>{updateId ? "Cập nhật" : "Tạo mới"} lịch làm việc</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Nhân viên:</label>
-            <select
-              name="userId"
-              value={formData.userId}
-              onChange={handleChange}
-              required
-              className="form-control"
-            >
-              <option value="">-- Chọn nhân viên --</option>
-              {employees.map((emp) => (
-                <option key={emp.id} value={emp.id}>
-                  {emp.fullName}{" "}
-                  {emp.departmentName ? `(${emp.departmentName})` : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Ca làm việc:</label>
-            <select
-              name="shiftId"
-              value={formData.shiftId}
-              onChange={handleChange}
-              required
-              className="form-control"
-            >
-              <option value="">-- Chọn ca làm --</option>
-              {shifts.map((shift) => (
-                <option key={shift.id} value={shift.id}>
-                  {shift.name} ({shift.startTime} - {shift.endTime})
-                  {!shift.isActive && " (Đã tắt)"}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Ngày làm việc:</label>
-            <input
-              type="date"
-              name="workDate"
-              value={formData.workDate}
-              onChange={handleChange}
-              required
-              className="form-control"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Ghi chú:</label>
-            <input
-              type="text"
-              name="note"
-              value={formData.note}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Nhập ghi chú (nếu có)"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Trạng thái:</label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="form-control"
-              required
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </div>
-
-          <div className="form-actions">
-            <button type="submit" className="btn btn-primary">
-              {updateId ? "Cập nhật" : "Tạo mới"}
-            </button>
-            {updateId && (
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => {
-                  setUpdateId(null);
-                  resetForm();
-                }}
+      {/* Chỉ admin mới được tạo/cập nhật lịch làm */}
+      {isAdmin && (
+        <div className="form-section">
+          <h2>{updateId ? "Cập nhật" : "Tạo mới"} lịch làm việc</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Nhân viên:</label>
+              <select
+                name="userId"
+                value={formData.userId}
+                onChange={handleChange}
+                required
+                className="form-control"
               >
-                Hủy
+                <option value="">-- Chọn nhân viên --</option>
+                {employees.map((emp) => (
+                  <option key={emp.id} value={emp.id}>
+                    {emp.fullName}{" "}
+                    {emp.departmentName ? `(${emp.departmentName})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Ca làm việc:</label>
+              <select
+                name="shiftId"
+                value={formData.shiftId}
+                onChange={handleChange}
+                required
+                className="form-control"
+              >
+                <option value="">-- Chọn ca làm --</option>
+                {shifts.map((shift) => (
+                  <option key={shift.id} value={shift.id}>
+                    {shift.name} ({shift.startTime} - {shift.endTime})
+                    {!shift.isActive && " (Đã tắt)"}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Ngày làm việc:</label>
+              <input
+                type="date"
+                name="workDate"
+                value={formData.workDate}
+                onChange={handleChange}
+                required
+                className="form-control"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Ghi chú:</label>
+              <input
+                type="text"
+                name="note"
+                value={formData.note}
+                onChange={handleChange}
+                className="form-control"
+                placeholder="Nhập ghi chú (nếu có)"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Trạng thái:</label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="form-control"
+                required
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary">
+                {updateId ? "Cập nhật" : "Tạo mới"}
               </button>
-            )}
-          </div>
-        </form>
-      </div>
+              {updateId && (
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setUpdateId(null);
+                    resetForm();
+                  }}
+                >
+                  Hủy
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Bộ lọc tháng/năm */}
       <div className="filter-section">
@@ -309,7 +317,8 @@ const WorkScheduleForm = () => {
                   <th>Thời gian</th>
                   <th>Trạng thái</th>
                   <th>Ghi chú</th>
-                  <th>Thao tác</th>
+                  {/* Chỉ admin mới có cột thao tác */}
+                  {isAdmin && <th>Thao tác</th>}
                 </tr>
               </thead>
               <tbody>
@@ -334,20 +343,23 @@ const WorkScheduleForm = () => {
                       </span>
                     </td>
                     <td>{schedule.note || "-"}</td>
-                    <td>
-                      <button
-                        onClick={() => handleEdit(schedule)}
-                        className="btn btn-edit"
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        onClick={() => handleDelete(schedule.id)}
-                        className="btn btn-delete"
-                      >
-                        Xóa
-                      </button>
-                    </td>
+                    {/* Chỉ admin mới có nút sửa/xóa */}
+                    {isAdmin && (
+                      <td>
+                        <button
+                          onClick={() => handleEdit(schedule)}
+                          className="btn btn-edit"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => handleDelete(schedule.id)}
+                          className="btn btn-delete"
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

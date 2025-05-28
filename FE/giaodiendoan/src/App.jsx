@@ -11,6 +11,7 @@ import ShiftPage from "./pages/ShiftPage";
 import StatisticsPage from "./pages/StatisticsPage";
 import QuanLyNhanVienPage from "./pages/QuanLyNhanVienPage";
 import EditUserPage from "./pages/EditUserPage";
+import LeaveRequestPage from "./pages/LeaveRequestPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="Statistics" element={<StatisticsPage />} />
         <Route path="QuanLyNhanVien" element={<QuanLyNhanVienPage />} />
         <Route path="QuanLyNhanVien/edit/:id" element={<EditUserPage />} />
+        <Route path="leave-requests" element={<LeaveRequestPage />} /> {/* Thêm dòng này */}
       </Route>
     </Routes>
   );
