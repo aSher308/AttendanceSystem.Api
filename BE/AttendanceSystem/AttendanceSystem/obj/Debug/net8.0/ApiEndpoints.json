@@ -775,83 +775,61 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
-    "Method": "GetAllStatistics",
-    "RelativePath": "api/Statistics/all",
+    "ContainingType": "AttendanceSystem.Controllers.StatisticController",
+    "Method": "GetStatistics",
+    "RelativePath": "api/Statistic",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "from",
+        "Name": "userId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "fromDate",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "to",
+        "Name": "toDate",
         "Type": "System.DateTime",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
-    "Method": "ExportToExcel",
-    "RelativePath": "api/Statistics/export-excel",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
+    "ReturnTypes": [
       {
-        "Name": "from",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "to",
-        "Type": "System.DateTime",
-        "IsRequired": false
+        "Type": "AttendanceSystem.DTOs.StatisticDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
       }
-    ],
-    "ReturnTypes": []
+    ]
   },
   {
-    "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
-    "Method": "GetLeaveAndOvertime",
-    "RelativePath": "api/Statistics/me/leave-overtime",
+    "ContainingType": "AttendanceSystem.Controllers.StatisticController",
+    "Method": "ExportStatistics",
+    "RelativePath": "api/Statistic/export",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "from",
+        "Name": "userId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "fromDate",
         "Type": "System.DateTime",
         "IsRequired": false
       },
       {
-        "Name": "to",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.StatisticsController",
-    "Method": "GetSummary",
-    "RelativePath": "api/Statistics/me/summary",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "from",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "to",
+        "Name": "toDate",
         "Type": "System.DateTime",
         "IsRequired": false
       }

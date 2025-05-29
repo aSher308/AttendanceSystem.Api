@@ -173,7 +173,7 @@ namespace AttendanceSystem.Services
             RecurringJob.AddOrUpdate<IAttendanceService>(
                 "auto-mark-absent",
                 service => service.AutoMarkAbsentAsync(GetVietnamTime().Date),
-                "0 23 * * *" // mỗi ngày lúc 23:00 UTC
+                "0 23 * * *" // mỗi ngày lúc 23:00 
             );
         }
 

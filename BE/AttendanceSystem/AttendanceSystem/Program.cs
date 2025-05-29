@@ -24,9 +24,10 @@ builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IOvertimeRequestService, OvertimeRequestService>();
 builder.Services.AddScoped<ISystemNotificationService, SystemNotificationService>();
 
 // Session
@@ -81,6 +82,7 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedLocationsAsync(dbContext);
     await DataSeeder.SeedDepartmentsAsync(dbContext);
 }
+
 
 // ---------------------- MIDDLEWARE PIPELINE ----------------------
 app.UseErrorHandling();

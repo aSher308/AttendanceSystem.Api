@@ -18,7 +18,6 @@ public class HealthCheckController : ControllerBase
     {
         try
         {
-            // Kiểm tra kết nối DB
             var canConnectDb = await _context.Database.CanConnectAsync();
 
             if (!canConnectDb)

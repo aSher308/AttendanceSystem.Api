@@ -1268,14 +1268,22 @@
         }
       }
     },
-    "/api/Statistics/me/summary": {
+    "/api/Statistic": {
       "get": {
         "tags": [
-          "Statistics"
+          "Statistic"
         ],
         "parameters": [
           {
-            "name": "from",
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fromDate",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1283,7 +1291,7 @@
             }
           },
           {
-            "name": "to",
+            "name": "toDate",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1293,19 +1301,44 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticDTO"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/Statistics/me/leave-overtime": {
+    "/api/Statistic/export": {
       "get": {
         "tags": [
-          "Statistics"
+          "Statistic"
         ],
         "parameters": [
           {
-            "name": "from",
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fromDate",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1313,67 +1346,7 @@
             }
           },
           {
-            "name": "to",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Statistics/export-excel": {
-      "get": {
-        "tags": [
-          "Statistics"
-        ],
-        "parameters": [
-          {
-            "name": "from",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Statistics/all": {
-      "get": {
-        "tags": [
-          "Statistics"
-        ],
-        "parameters": [
-          {
-            "name": "from",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "to",
+            "name": "toDate",
             "in": "query",
             "schema": {
               "type": "string",
@@ -2865,6 +2838,65 @@
           "description": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatisticDTO": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalWorkDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalWorkingHours": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalLateDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalLeaveEarlyDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalAbsentDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalLeaveDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalOvertimeHours": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentLeaveBalance": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPenaltyHours": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
