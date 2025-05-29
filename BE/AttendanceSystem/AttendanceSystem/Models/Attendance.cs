@@ -51,6 +51,10 @@ namespace AttendanceSystem.Models
         [StringLength(255)]
         public string? AdjustmentReason { get; set; }
 
+        // Thêm liên kết đến lịch làm việc (ca làm)
+        public int? WorkScheduleId { get; set; }
+        public WorkSchedule? WorkSchedule { get; set; }
+
         // Navigation
         public User User { get; set; }
 

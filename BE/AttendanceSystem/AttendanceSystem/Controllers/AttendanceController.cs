@@ -13,9 +13,10 @@ namespace AttendanceSystem.Controllers
     {
         private readonly IAttendanceService _attendanceService;
         private readonly IAccountService _accountService;
-        public AttendanceController(IAttendanceService attendanceService)
+        public AttendanceController(IAttendanceService attendanceService, IAccountService accountService)
         {
             _attendanceService = attendanceService;
+            _accountService = accountService;
         }
         // Check-in
         [HttpPost("check-in")]
@@ -33,6 +34,7 @@ namespace AttendanceSystem.Controllers
             var result = await _attendanceService.CheckOutAsync(request);
             return Ok(result);
         }
+
         // Get all Attendance
         [HttpGet]
         [RequireRole("User", "Admin")]

@@ -11,7 +11,7 @@
         public string AttendanceType { get; set; }
         public string LocationName { get; set; }
         public string DeviceInfo { get; set; }
-        public string CheckInPhotoUrl { get; set; }
+        public string? CheckInPhotoUrl { get; set; }
         public string? CheckOutPhotoUrl { get; set; }
         public double? CheckInLatitude { get; set; }
         public double? CheckInLongitude { get; set; }

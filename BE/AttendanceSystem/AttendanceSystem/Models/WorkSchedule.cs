@@ -25,5 +25,6 @@ namespace AttendanceSystem.Models
         public User User { get; set; }
 
         public Shift Shift { get; set; }
+        public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
     }
 }

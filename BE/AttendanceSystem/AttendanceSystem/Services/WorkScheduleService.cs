@@ -99,6 +99,20 @@ namespace AttendanceSystem.Services
         {
             var schedule = await _context.WorkSchedules.FindAsync(id);
             if (schedule == null) return false;
+
+            // Kiểm tra xem có attendance nào đã check-in hoặc check-out cho ca làm việc này không
+            bool hasAttendance = await _context.Attendances.AnyAsync(a =>
+                a.UserId == schedule.UserId &&
+                a.CheckIn.Date == schedule.WorkDate &&
+                (a.CheckIn != default(DateTime) || a.CheckOut != null)
+            );
+
+            if (hasAttendance)
+            {
+                // Không cho phép xóa nếu đã có check-in hoặc check-out
+                throw new InvalidOperationException("Không thể xóa lịch làm việc vì đã có bản ghi chấm công.");
+            }
+
             _context.WorkSchedules.Remove(schedule);
             await _context.SaveChangesAsync();
             return true;

@@ -71,6 +71,12 @@ namespace AttendanceSystem.Data
                .WithMany(l => l.Attendances)
                .HasForeignKey(a => a.LocationId)
                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Attendance>()
+               .HasOne(a => a.WorkSchedule)
+               .WithMany(ws => ws.Attendances)
+               .HasForeignKey(a => a.WorkScheduleId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

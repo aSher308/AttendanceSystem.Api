@@ -36,41 +36,49 @@ namespace AttendanceSystem.Services
 
         public async Task<AttendanceResponse> CheckInAsync(AttendanceCheckInRequest request)
         {
-            var today = GetVietnamTime().Date;
+            var now = GetVietnamTime();
+            var today = now.Date;
 
-            var existing = await _context.Attendances.FirstOrDefaultAsync(a => a.UserId == request.UserId && a.CheckIn.Date == today);
-            if (existing != null) throw new AppException("Đã check-in trong ngày hôm nay");
+            var schedulesToday = await _context.WorkSchedules
+                .Include(ws => ws.Shift)
+                .Where(ws => ws.UserId == request.UserId && ws.WorkDate == today)
+                .ToListAsync();
 
-            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift)
-                                     .FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
-            if (schedule == null) throw new AppException("Hôm nay bạn không có lịch làm việc");
+            if (!schedulesToday.Any())
+                throw new AppException("Hôm nay bạn không có lịch làm việc");
 
-            var location = await _context.Locations.FirstOrDefaultAsync(l => l.Name == request.LocationName);
-            if (location == null) throw new AppException("Không tìm thấy địa điểm hợp lệ để check-in");
+            var checkedInScheduleIds = await _context.Attendances
+                .Where(a => a.UserId == request.UserId && a.CheckIn.Date == today)
+                .Select(a => a.WorkScheduleId)
+                .ToListAsync();
 
-            // Kiểm tra khoảng cách với vị trí hợp lệ
-            if (request.Latitude.HasValue && request.Longitude.HasValue)
+            var matchedSchedule = schedulesToday.FirstOrDefault(s =>
             {
-                double distance = CalculateDistance(request.Latitude.Value, request.Longitude.Value, location.Latitude, location.Longitude);
-                if (distance > location.RadiusInMeters)
-                {
-                    throw new AppException("Bạn đang ở ngoài phạm vi cho phép để check-in (" + Math.Round(distance) + "m)");
-                }
-            }
+                var checkInTime = today.Add(s.Shift.StartTime);
+                var diff = (now - checkInTime).TotalMinutes;
+                return !checkedInScheduleIds.Contains(s.Id) && diff >= -180 && diff <= 180;
+            });
 
-            var vietnamNow = GetVietnamTime();
-            var expectedCheckIn = today.Add(schedule.Shift.StartTime);
-            var diffCheckIn = (vietnamNow - expectedCheckIn).TotalMinutes;
-            var status = diffCheckIn > 15 ? AttendanceStatus.Late : AttendanceStatus.OnTime;
+            if (matchedSchedule == null)
+                throw new AppException("Không tìm thấy ca làm phù hợp hoặc đã check-in tất cả ca hôm nay");
+
+            var location = await FindMatchingLocationAsync(request.Latitude, request.Longitude);
+            if (location == null)
+                throw new AppException("Không ở trong phạm vi địa điểm nào được phép check-in");
+
+            var status = (now - today.Add(matchedSchedule.Shift.StartTime)).TotalMinutes > 15
+                ? AttendanceStatus.Late
+                : AttendanceStatus.OnTime;
 
             var attendance = new Attendance
             {
                 UserId = request.UserId,
-                CheckIn = vietnamNow,
+                WorkScheduleId = matchedSchedule.Id,
+                CheckIn = now,
                 Status = status,
                 AttendanceType = request.AttendanceType,
-                LocationName = request.LocationName,
                 LocationId = location.Id,
+                LocationName = location.Name,
                 DeviceInfo = request.DeviceInfo,
                 CheckInLatitude = request.Latitude,
                 CheckInLongitude = request.Longitude,
@@ -86,39 +94,30 @@ namespace AttendanceSystem.Services
 
         public async Task<AttendanceResponse> CheckOutAsync(AttendanceCheckOutRequest request)
         {
-            var today = GetVietnamTime().Date;
+            var attendance = await _context.Attendances
+                .FirstOrDefaultAsync(a => a.UserId == request.UserId && a.WorkScheduleId == request.WorkScheduleId && a.CheckOut == null)
+                ?? throw new AppException("Không tìm thấy bản ghi check-in chưa check-out cho ca này");
 
-            var attendance = await _context.Attendances.FirstOrDefaultAsync(a => a.UserId == request.UserId && a.CheckIn.Date == today);
-            if (attendance == null) throw new AppException("Chưa check-in trong ngày hôm nay");
-            if (attendance.CheckOut.HasValue) throw new AppException("Đã check-out trước đó");
+            var schedule = await _context.WorkSchedules
+                .Include(ws => ws.Shift)
+                .FirstOrDefaultAsync(ws => ws.Id == request.WorkScheduleId && ws.UserId == request.UserId)
+                ?? throw new AppException("Không tìm thấy ca làm việc tương ứng");
 
-            var schedule = await _context.WorkSchedules.Include(ws => ws.Shift)
-                                    .FirstOrDefaultAsync(ws => ws.UserId == request.UserId && ws.WorkDate == today);
-            if (schedule == null) throw new AppException("Hôm nay bạn không có lịch làm việc");
+            var now = GetVietnamTime();
+            var expectedCheckOut = schedule.WorkDate.Add(schedule.Shift.EndTime);
+            var diff = (now - expectedCheckOut).TotalMinutes;
 
-            var location = await _context.Locations.FirstOrDefaultAsync(l => l.Name == attendance.LocationName);
-            if (location == null) throw new AppException("Không tìm thấy địa điểm hợp lệ để check-out");
+            if (diff < -30)
+                throw new AppException("Chưa đến giờ check-out, vui lòng thử lại sau");
 
-            // Kiểm tra khoảng cách vị trí check-out
-            if (request.Latitude.HasValue && request.Longitude.HasValue)
-            {
-                double distance = CalculateDistance(request.Latitude.Value, request.Longitude.Value, location.Latitude, location.Longitude);
-                if (distance > location.RadiusInMeters)
-                {
-                    throw new AppException("Bạn đang ở ngoài phạm vi cho phép để check-out (" + Math.Round(distance) + "m)");
-                }
-            }
+            var location = await FindMatchingLocationAsync(request.Latitude, request.Longitude);
+            if (location == null)
+                throw new AppException("Bạn đang ở ngoài phạm vi cho phép để check-out");
 
-            var vietnamNow = GetVietnamTime();
-            var expectedCheckOut = today.Add(schedule.Shift.EndTime);
-            var diffCheckOut = (expectedCheckOut - vietnamNow).TotalMinutes;
-
-            if (diffCheckOut > 15)
-            {
+            if (diff < 0)
                 attendance.Status = AttendanceStatus.LeaveEarly;
-            }
 
-            attendance.CheckOut = vietnamNow;
+            attendance.CheckOut = now;
             attendance.CheckOutLatitude = request.Latitude;
             attendance.CheckOutLongitude = request.Longitude;
             attendance.CheckOutPhotoUrl = request.PhotoUrl;
@@ -129,6 +128,15 @@ namespace AttendanceSystem.Services
             var user = await _context.Users.FindAsync(request.UserId);
             return ToResponse(attendance, user);
         }
+        private async Task<Location?> FindMatchingLocationAsync(double? lat, double? lng)
+        {
+            if (!lat.HasValue || !lng.HasValue) return null;
+
+            var locations = await _context.Locations.ToListAsync();
+            return locations.FirstOrDefault(loc =>
+                CalculateDistance(lat.Value, lng.Value, loc.Latitude, loc.Longitude) <= loc.RadiusInMeters);
+        }
+
         public async Task AutoMarkAbsentAsync(DateTime date)
         {
             var schedules = await _context.WorkSchedules
@@ -173,13 +181,20 @@ namespace AttendanceSystem.Services
         {
             var query = _context.Attendances.Include(a => a.User).AsQueryable();
 
-            if (userId.HasValue) query = query.Where(a => a.UserId == userId);
-            if (fromDate.HasValue) query = query.Where(a => a.CheckIn.Date >= fromDate.Value.Date);
-            if (toDate.HasValue) query = query.Where(a => a.CheckIn.Date <= toDate.Value.Date);
-            if (!string.IsNullOrEmpty(status) && Enum.TryParse<AttendanceStatus>(status, out var s))
+            if (userId.HasValue)
+                query = query.Where(a => a.UserId == userId);
+
+            if (fromDate.HasValue)
+                query = query.Where(a => a.CheckIn >= fromDate.Value.Date);
+
+            if (toDate.HasValue)
+                query = query.Where(a => a.CheckIn < toDate.Value.Date.AddDays(1));
+
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse<AttendanceStatus>(status, true, out var s))
                 query = query.Where(a => a.Status == s);
 
             var list = await query.ToListAsync();
+
             return list.Select(a => ToResponse(a, a.User)).ToList();
         }
 

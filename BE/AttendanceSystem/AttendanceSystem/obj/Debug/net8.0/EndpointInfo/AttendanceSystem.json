@@ -2399,6 +2399,10 @@
           "photoUrl": {
             "type": "string",
             "nullable": true
+          },
+          "workScheduleId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
