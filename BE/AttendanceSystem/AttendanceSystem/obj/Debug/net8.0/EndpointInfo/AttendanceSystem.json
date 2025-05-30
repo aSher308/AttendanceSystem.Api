@@ -1409,7 +1409,7 @@
         }
       }
     },
-    "/api/SystemNotifications/user/{userId}": {
+    "/api/SystemNotifications/me": {
       "get": {
         "tags": [
           "SystemNotifications"
@@ -1417,8 +1417,7 @@
         "parameters": [
           {
             "name": "userId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1458,7 +1457,7 @@
         }
       }
     },
-    "/api/SystemNotifications/user/{userId}/unread": {
+    "/api/SystemNotifications/me/unread": {
       "get": {
         "tags": [
           "SystemNotifications"
@@ -1466,8 +1465,7 @@
         "parameters": [
           {
             "name": "userId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"

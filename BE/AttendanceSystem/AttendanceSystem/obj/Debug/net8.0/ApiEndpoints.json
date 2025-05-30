@@ -974,7 +974,7 @@
   {
     "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
     "Method": "GetUserNotifications",
-    "RelativePath": "api/SystemNotifications/user/{userId}",
+    "RelativePath": "api/SystemNotifications/me",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -982,7 +982,33 @@
       {
         "Name": "userId",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[AttendanceSystem.DTOs.SystemNotificationDTO, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
+    "Method": "GetUnreadNotifications",
+    "RelativePath": "api/SystemNotifications/me/unread",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1012,32 +1038,6 @@
       }
     ],
     "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
-    "Method": "GetUnreadNotifications",
-    "RelativePath": "api/SystemNotifications/user/{userId}/unread",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[AttendanceSystem.DTOs.SystemNotificationDTO, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.UserController",
