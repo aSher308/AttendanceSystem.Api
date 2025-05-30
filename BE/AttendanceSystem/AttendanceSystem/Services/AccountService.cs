@@ -40,13 +40,26 @@ namespace AttendanceSystem.Services
             };
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // ⬅ User đã có Id sau dòng này
+
+            // ✅ Gán Role mặc định là "User"
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "User");
+            if (role != null)
+            {
+                _context.UserRoles.Add(new UserRole
+                {
+                    UserId = user.Id,
+                    RoleId = role.Id
+                });
+                await _context.SaveChangesAsync(); // lưu role vào DB
+            }
 
             var link = $"{confirmUrl}?token={user.EmailConfirmationToken}";
             await SendEmailAsync(user.Email, "Xác nhận email", $"Nhấn vào đây để xác nhận: {link}");
 
             return user;
         }
+
 
         public async Task<bool> ConfirmEmailAsync(string token)
         {

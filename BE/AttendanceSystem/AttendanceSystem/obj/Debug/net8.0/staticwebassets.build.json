@@ -1,20 +1,11 @@
 {
   "Version": 1,
-  "Hash": "XIszEtxusFP2znGb450LRDX4uu243zuUns1CVHPk8Ds=",
+  "Hash": "uPJBFnOCubYSN5KiSvvDxAmS/kEM4buaybRBvySZKBs=",
   "Source": "AttendanceSystem",
   "BasePath": "_content/AttendanceSystem",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [
-    {
-      "Name": "AttendanceSystem\\wwwroot",
-      "Source": "AttendanceSystem",
-      "ContentRoot": "D:\\AttendanceSystem.Api\\BE\\AttendanceSystem\\AttendanceSystem\\wwwroot\\",
-      "BasePath": "_content/AttendanceSystem",
-      "Pattern": "**"
-    }
-  ],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [],
+  "Assets": []
 }
