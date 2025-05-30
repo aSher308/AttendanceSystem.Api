@@ -302,6 +302,6 @@ namespace AttendanceSystem.Services
     public class StatisticConfig
     {
         public int EarlyLeaveThresholdMinutes { get; set; } = 30; // Ngưỡng về sớm để áp dụng phạt
-        public double EarlyLeavePenaltyRate { get; set; } = 0.5; // Mức phạt 50% giờ làm
+        public double EarlyLeavePenaltyRate { get; set; } = 0.75; // Mức phạt 25% giờ làm
     }
 }

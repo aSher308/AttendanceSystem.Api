@@ -1,4 +1,5 @@
-﻿using AttendanceSystem.DTOs;
+﻿using AttendanceSystem.Attributes;
+using AttendanceSystem.DTOs;
 using AttendanceSystem.Services.Interfaces;
 using Hangfire.Storage.Monitoring;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,11 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet]
+        [RequireRole("User", "Admin")]
         public async Task<ActionResult<StatisticDTO>> GetStatistics(
-            [FromQuery] int? userId,
-            [FromQuery] DateTime fromDate,
-            [FromQuery] DateTime toDate)
+        [FromQuery] int? userId,
+        [FromQuery] DateTime? fromDate,
+        [FromQuery] DateTime? toDate)
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null) return Unauthorized();
@@ -34,12 +36,17 @@ namespace AttendanceSystem.Controllers
             var isAdmin = await _accountService.IsAdminAsync(currentUserId.Value);
             if (!isAdmin)
             {
-                userId = currentUserId.Value; // Ép userId về chính mình
+                userId = currentUserId.Value;
             }
+
+            // Nếu không truyền fromDate và toDate thì lấy tháng hiện tại
+            var now = DateTime.Now;
+            var start = fromDate ?? new DateTime(now.Year, now.Month, 1);
+            var end = toDate ?? start.AddMonths(1).AddDays(-1); // đến cuối tháng
 
             try
             {
-                var statistics = await _statisticService.GetStatisticsAsync(userId, fromDate, toDate);
+                var statistics = await _statisticService.GetStatisticsAsync(userId, start, end);
                 return Ok(statistics);
             }
             catch (Exception ex)
@@ -49,10 +56,11 @@ namespace AttendanceSystem.Controllers
         }
 
         [HttpGet("export")]
+        [RequireRole("User", "Admin")]
         public async Task<IActionResult> ExportStatistics(
             [FromQuery] int? userId,
-            [FromQuery] DateTime fromDate,
-            [FromQuery] DateTime toDate)
+            [FromQuery] DateTime? fromDate,
+            [FromQuery] DateTime? toDate)
         {
             var currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null) return Unauthorized();
@@ -60,19 +68,24 @@ namespace AttendanceSystem.Controllers
             var isAdmin = await _accountService.IsAdminAsync(currentUserId.Value);
             if (!isAdmin)
             {
-                userId = currentUserId.Value; // Ép userId về chính mình
+                userId = currentUserId.Value;
             }
+
+            var now = DateTime.Now;
+            var start = fromDate ?? new DateTime(now.Year, now.Month, 1);
+            var end = toDate ?? start.AddMonths(1).AddDays(-1);
 
             try
             {
-                var excelBytes = await _statisticService.ExportStatisticsToExcelAsync(userId, fromDate, toDate);
+                var excelBytes = await _statisticService.ExportStatisticsToExcelAsync(userId, start, end);
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    $"ThongKe_{fromDate:yyyyMMdd}_{toDate:yyyyMMdd}.xlsx");
+                    $"ThongKe_{start:yyyyMMdd}_{end:yyyyMMdd}.xlsx");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }
