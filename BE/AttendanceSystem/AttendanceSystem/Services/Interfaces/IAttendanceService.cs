@@ -11,5 +11,6 @@ namespace AttendanceSystem.Services.Interfaces
         Task<bool> UpdateAsync(AttendanceUpdateRequest request);
         Task<byte[]> ExportToExcelAsync(int? userId, DateTime? fromDate, DateTime? toDate);
         Task AutoMarkAbsentAsync(DateTime date);
+        Task<LocationCheckResponse> CheckLocationAsync(double latitude, double longitude);
     }
 }

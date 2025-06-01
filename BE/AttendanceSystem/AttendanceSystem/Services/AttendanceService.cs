@@ -282,5 +282,18 @@ namespace AttendanceSystem.Services
                 AdjustedAt = a.AdjustedAt
             };
         }
+
+        public async Task<LocationCheckResponse> CheckLocationAsync(double latitude, double longitude)
+        {
+            var location = await FindMatchingLocationAsync(latitude, longitude);
+            return new LocationCheckResponse
+            {
+                IsValid = location != null,
+                LocationId = location?.Id,
+                LocationName = location?.Name,
+                RadiusInMeters = location?.RadiusInMeters
+            };
+        }
+
     }
 }

@@ -77,5 +77,12 @@ namespace AttendanceSystem.Controllers
             var file = await _attendanceService.ExportToExcelAsync(userId, fromDate, toDate);
             return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "attendance.xlsx");
         }
+
+        [HttpGet("check-location")]
+        public async Task<ActionResult<LocationCheckResponse>> CheckLocation([FromQuery] double latitude, [FromQuery] double longitude)
+        {
+            var result = await _attendanceService.CheckLocationAsync(latitude, longitude);
+            return Ok(result);
+        }
     }
 }

@@ -257,6 +257,37 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.AttendanceController",
+    "Method": "CheckLocation",
+    "RelativePath": "api/Attendance/check-location",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "latitude",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "longitude",
+        "Type": "System.Double",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "AttendanceSystem.DTOs.LocationCheckResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "AttendanceSystem.Controllers.AttendanceController",
     "Method": "CheckOut",
     "RelativePath": "api/Attendance/check-out",
     "HttpMethod": "POST",
