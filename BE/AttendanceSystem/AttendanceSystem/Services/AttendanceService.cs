@@ -128,6 +128,8 @@ namespace AttendanceSystem.Services
             var user = await _context.Users.FindAsync(request.UserId);
             return ToResponse(attendance, user);
         }
+
+        //check vi tri
         private async Task<Location?> FindMatchingLocationAsync(double? lat, double? lng)
         {
             if (!lat.HasValue || !lng.HasValue) return null;

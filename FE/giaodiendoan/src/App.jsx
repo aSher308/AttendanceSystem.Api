@@ -14,6 +14,7 @@ import EditUserPage from "./pages/EditUserPage";
 import LichNghiPhepCaNhan from "./pages/LichNghiPhepCaNhanPage";
 import XemLichLamPage from "./pages/XemLichLamPage";
 import QuanLyDonNghiPhepPage from "./pages/QuanLyDonNghiPhepPage";
+import LocationPage from "./pages/LocationPage";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           path="QuanLyDonNghiPhepPage"
           element={<QuanLyDonNghiPhepPage />}
         />
+        <Route path="LocationPage" element={<LocationPage />} />
       </Route>
     </Routes>
   );

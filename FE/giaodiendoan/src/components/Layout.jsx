@@ -125,6 +125,11 @@ export default function Layout() {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link to="/layout/LocationPage" className="nav-link">
+                    Quản lý vị trí
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link to="Statistics" className="nav-link">
                     Báo cáo tổng hợp
                   </Link>

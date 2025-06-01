@@ -13,9 +13,11 @@ L.Icon.Default.mergeOptions({
 });
 
 const attendanceTypeMap = {
-  Normal: 0,
-  QR: 1,
-  Remote: 2,
+  GPS: "GPS",
+  QR: "QR",
+  FaceRecognition: "FaceRecognition",
+  Manual: "Manual",
+  Remote: "GPS",
 };
 
 const TimekeepingForm = () => {
@@ -26,27 +28,32 @@ const TimekeepingForm = () => {
   const [longitude, setLongitude] = useState(null);
   const [photoUrl, setPhotoUrl] = useState("");
   const [message, setMessage] = useState("");
-  const [attendanceType, setAttendanceType] = useState("Normal");
+  const [attendanceType, setAttendanceType] = useState("GPS");
   const [showMap, setShowMap] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const [workSchedules, setWorkSchedules] = useState([]);
-  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
-  const [checkInStatus, setCheckInStatus] = useState(null);
   const [currentLocationName, setCurrentLocationName] = useState("");
   const [isValidLocation, setIsValidLocation] = useState(false);
+  const [lastCheckIn, setLastCheckIn] = useState(null);
+  const [canCheckOut, setCanCheckOut] = useState(false);
+  const [workSchedules, setWorkSchedules] = useState([]);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
+  const [attendanceHistory, setAttendanceHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkInStatus, setCheckInStatus] = useState(null);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Load userId, device info và lấy lịch làm việc hôm nay
+  // Load userId và device info
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       const parsedUserId = parseInt(storedUserId, 10);
       setUserId(parsedUserId);
       setDeviceInfo(navigator.userAgent);
-
       fetchTodaySchedules(parsedUserId);
+      checkTodayAttendance(parsedUserId);
+      fetchAttendanceHistory(parsedUserId);
     } else {
       setMessage(
         "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại."
@@ -90,12 +97,12 @@ const TimekeepingForm = () => {
     }
   };
 
-  // Hàm lấy lịch làm việc của user hôm nay
+  // Lấy lịch làm việc hôm nay
   const fetchTodaySchedules = async (userId) => {
     try {
-      const now = new Date();
-      const fromDate = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-      const toDate = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+      const today = new Date();
+      const fromDate = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+      const toDate = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
       const response = await axiosInstance.get("/WorkSchedule", {
         params: { userId, fromDate, toDate },
@@ -103,12 +110,52 @@ const TimekeepingForm = () => {
 
       setWorkSchedules(response.data);
 
-      if (response.data.length === 1) {
+      if (response.data.length > 0) {
         setSelectedScheduleId(response.data[0].id);
       }
     } catch (error) {
       console.error("Lỗi lấy lịch làm việc:", error);
       setMessage("Không thể lấy thông tin ca làm việc.");
+    }
+  };
+
+  // Lấy lịch sử chấm công
+  const fetchAttendanceHistory = async (userId) => {
+    try {
+      const today = new Date();
+      const fromDate = new Date(
+        today.setDate(today.getDate() - 7)
+      ).toISOString(); // Lấy dữ liệu 7 ngày
+      const toDate = new Date().toISOString();
+
+      const response = await axiosInstance.get("/attendance", {
+        params: { userId, fromDate, toDate },
+      });
+
+      setAttendanceHistory(response.data);
+    } catch (error) {
+      console.error("Lỗi lấy lịch sử chấm công:", error);
+    }
+  };
+
+  // Kiểm tra trạng thái chấm công hôm nay
+  const checkTodayAttendance = async (userId) => {
+    try {
+      const today = new Date();
+      const fromDate = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+      const toDate = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+
+      const response = await axiosInstance.get("/attendance", {
+        params: { userId, fromDate, toDate },
+      });
+
+      if (response.data && response.data.length > 0) {
+        const latest = response.data[0];
+        setLastCheckIn(latest);
+        setCanCheckOut(latest.checkIn && !latest.checkOut);
+      }
+    } catch (error) {
+      console.error("Lỗi kiểm tra chấm công:", error);
     }
   };
 
@@ -169,7 +216,102 @@ const TimekeepingForm = () => {
     }
   };
 
-  // Tính trạng thái check-in sớm hay muộn so với giờ bắt đầu ca
+  // Handle check-in
+  const handleCheckIn = async () => {
+    console.log(deviceInfo);
+    setIsLoading(true);
+    try {
+      if (!selectedScheduleId) throw new Error("Vui lòng chọn ca làm việc.");
+
+      if (attendanceType !== "Remote" && (!latitude || !longitude)) {
+        throw new Error("Vui lòng lấy vị trí trước khi check-in.");
+      }
+
+      if (attendanceType === "Remote" && !photoUrl) {
+        throw new Error("Vui lòng chụp ảnh xác thực khi làm từ xa.");
+      }
+
+      const schedule = workSchedules.find((w) => w.id === selectedScheduleId);
+      if (!schedule) throw new Error("Ca làm việc không hợp lệ.");
+
+      // Kiểm tra vị trí nếu không phải Remote
+      if (attendanceType !== "Remote" && !isValidLocation) {
+        throw new Error("Vị trí hiện tại không hợp lệ để chấm công");
+      }
+
+      const status = calculateCheckInStatus(schedule.startTime);
+      setCheckInStatus(status);
+
+      const request = {
+        userId,
+        locationName:
+          currentLocationName ||
+          (attendanceType === "Remote" ? "Làm từ xa" : "Văn phòng"),
+        deviceInfo: navigator.userAgent || "Unknown Device",
+        latitude: attendanceType === "Remote" ? null : latitude,
+        longitude: attendanceType === "Remote" ? null : longitude,
+        photoUrl:
+          attendanceType === "FaceRecognition" || attendanceType === "Remote"
+            ? photoUrl
+            : null,
+        attendanceType: attendanceTypeMap[attendanceType] || "GPS",
+        workScheduleId: selectedScheduleId,
+      };
+
+      const response = await axiosInstance.post(
+        "/attendance/check-in",
+        request
+      );
+      setMessage("Check-in thành công!");
+      setCanCheckOut(true);
+      checkTodayAttendance(userId);
+      fetchAttendanceHistory(userId);
+    } catch (error) {
+      console.error("Lỗi check-in:", error);
+      setMessage(
+        error.response?.data?.message || error.message || "Lỗi khi check-in"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle check-out
+  const handleCheckOut = async () => {
+    setIsLoading(true);
+    try {
+      if (!lastCheckIn) {
+        throw new Error("Bạn chưa check-in hôm nay. Không thể check-out.");
+      }
+
+      const request = {
+        userId,
+        deviceInfo: navigator.userAgent || "Unknown Device",
+        latitude: attendanceType === "Remote" ? null : latitude,
+        longitude: attendanceType === "Remote" ? null : longitude,
+        photoUrl: attendanceType === "FaceRecognition" ? photoUrl : null,
+        workScheduleId: selectedScheduleId,
+      };
+
+      const response = await axiosInstance.post(
+        "/attendance/check-out",
+        request
+      );
+      setMessage("Check-out thành công!");
+      setCanCheckOut(false);
+      checkTodayAttendance(userId);
+      fetchAttendanceHistory(userId);
+    } catch (error) {
+      console.error("Lỗi check-out:", error);
+      setMessage(
+        error.response?.data?.message || error.message || "Lỗi khi check-out"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Tính trạng thái check-in (sớm/đúng giờ/muộn)
   const calculateCheckInStatus = (scheduleStartTime) => {
     try {
       if (!scheduleStartTime) return null;
@@ -194,126 +336,29 @@ const TimekeepingForm = () => {
     }
   };
 
-  // Handle check-in
-  const handleCheckIn = async () => {
-    console.log(deviceInfo);
-    try {
-      if (!selectedScheduleId) throw new Error("Vui lòng chọn ca làm việc.");
-
-      if (attendanceType !== "Remote" && (!latitude || !longitude)) {
-        throw new Error("Vui lòng lấy vị trí trước khi check-in.");
-      }
-
-      if (attendanceType === "Remote" && !photoUrl) {
-        throw new Error("Vui lòng chụp ảnh xác thực khi làm từ xa.");
-      }
-
-      const schedule = workSchedules.find((w) => w.id === selectedScheduleId);
-      if (!schedule) throw new Error("Ca làm việc không hợp lệ.");
-
-      // Kiểm tra vị trí nếu không phải Remote
-      if (attendanceType !== "Remote" && !isValidLocation) {
-        throw new Error("Vị trí hiện tại không hợp lệ để chấm công");
-      }
-
-      const status = calculateCheckInStatus(schedule.startTime);
-
-      const request = {
-        userId,
-        locationName:
-          currentLocationName ||
-          (attendanceType === "Remote" ? "Làm từ xa" : "Văn phòng"),
-        latitude,
-        longitude,
-        photoUrl: attendanceType === "Remote" ? photoUrl : "",
-        attendanceType: attendanceTypeMap[attendanceType] ?? 4,
-        deviceInfo: navigator.userAgent || "Unknown Device",
-        workScheduleId: selectedScheduleId,
-      };
-
-      const response = await axiosInstance.post(
-        "/Attendance/check-in",
-        request
-      );
-      setMessage(response.data.message || "Check-in thành công!");
-      setCheckInStatus(status);
-    } catch (error) {
-      console.error("Lỗi check-in:", error);
-      setMessage(
-        error.response?.data?.message || error.message || "Lỗi khi check-in"
-      );
-    }
-  };
-
-  // Handle check-out
-  const handleCheckOut = async () => {
-    try {
-      if (!selectedScheduleId) {
-        throw new Error("Vui lòng chọn ca làm việc.");
-      }
-
-      if (!latitude || !longitude) {
-        throw new Error("Vui lòng lấy vị trí trước khi check-out.");
-      }
-
-      if (!isValidLocation) {
-        throw new Error("Vị trí hiện tại không hợp lệ để check-out");
-      }
-
-      // Kiểm tra xem đã check-in chưa
-      const checkInRecord = await axiosInstance.get(
-        `/Attendance/today-checkin/${userId}`
-      );
-      if (!checkInRecord.data) {
-        throw new Error("Bạn chưa check-in hôm nay. Không thể check-out.");
-      }
-
-      const request = {
-        userId,
-        deviceInfo: navigator.userAgent || "Unknown Device",
-        latitude,
-        longitude,
-        photoUrl: photoUrl || "",
-        workScheduleId: selectedScheduleId,
-      };
-
-      const response = await axiosInstance.post(
-        "/Attendance/check-out",
-        request
-      );
-      setMessage(response.data.message || "Check-out thành công!");
-    } catch (error) {
-      console.error("Lỗi check-out:", error);
-      setMessage(
-        error.response?.data?.message || error.message || "Lỗi khi check-out"
-      );
-    }
-  };
-
   return (
     <div className="timekeeping-container">
       <h2>Chấm công</h2>
 
       {/* Chọn ca làm việc */}
-      {workSchedules.length > 0 && (
-        <div className="mb-3">
-          <label>Ca làm việc:</label>
-          <select
-            className="form-control"
-            value={selectedScheduleId || ""}
-            onChange={(e) => setSelectedScheduleId(Number(e.target.value))}
-          >
-            {!selectedScheduleId && (
-              <option value="">-- Chọn ca làm việc --</option>
-            )}
-            {workSchedules.map((schedule) => (
-              <option key={schedule.id} value={schedule.id}>
-                {schedule.shiftName} ({schedule.startTime} - {schedule.endTime})
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      <div className="mb-3">
+        <label>Ca làm việc:</label>
+        <select
+          className="form-control"
+          value={selectedScheduleId || ""}
+          onChange={(e) => setSelectedScheduleId(Number(e.target.value))}
+          disabled={isLoading}
+        >
+          {workSchedules.length === 0 && (
+            <option value="">Không có ca làm việc hôm nay</option>
+          )}
+          {workSchedules.map((schedule) => (
+            <option key={schedule.id} value={schedule.id}>
+              {schedule.shiftName} ({schedule.startTime} - {schedule.endTime})
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Chọn hình thức chấm công */}
       <div className="mb-3">
@@ -322,16 +367,22 @@ const TimekeepingForm = () => {
           className="form-control"
           value={attendanceType}
           onChange={(e) => setAttendanceType(e.target.value)}
+          disabled={isLoading}
         >
-          <option value="Normal">Thông thường (GPS)</option>
+          <option value="GPS">Thông thường (GPS)</option>
           <option value="QR">Quét QR</option>
+          <option value="FaceRecognition">Nhận diện khuôn mặt</option>
           <option value="Remote">Làm từ xa</option>
         </select>
       </div>
 
       {/* Nút lấy vị trí (ẩn nếu Remote) */}
       {attendanceType !== "Remote" && (
-        <button className="btn btn-primary mb-3" onClick={getLocation}>
+        <button
+          className="btn btn-primary mb-3"
+          onClick={getLocation}
+          disabled={isLoading}
+        >
           Lấy vị trí hiện tại
         </button>
       )}
@@ -366,11 +417,15 @@ const TimekeepingForm = () => {
         </div>
       )}
 
-      {/* Camera cho Remote hoặc QR */}
-      {(attendanceType === "Remote" || attendanceType === "QR") &&
+      {/* Camera cho Remote hoặc FaceRecognition */}
+      {(attendanceType === "Remote" || attendanceType === "FaceRecognition") &&
         !photoUrl &&
         !showCamera && (
-          <button className="btn btn-secondary mb-3" onClick={startCamera}>
+          <button
+            className="btn btn-secondary mb-3"
+            onClick={startCamera}
+            disabled={isLoading}
+          >
             Bật camera
           </button>
         )}
@@ -400,6 +455,7 @@ const TimekeepingForm = () => {
               setPhotoUrl("");
               if (!showCamera) startCamera();
             }}
+            disabled={isLoading}
           >
             Chụp lại
           </button>
@@ -418,15 +474,41 @@ const TimekeepingForm = () => {
         </div>
       )}
 
-      {/* Nút check-in, check-out */}
-      <div>
-        <button className="btn btn-success me-2" onClick={handleCheckIn}>
-          Check-in
+      {/* Nút check-in/out */}
+      <div className="mb-3">
+        <button
+          className="btn btn-success me-2"
+          onClick={handleCheckIn}
+          disabled={canCheckOut || isLoading}
+        >
+          {isLoading ? "Đang xử lý..." : "Check-in"}
         </button>
-        <button className="btn btn-danger" onClick={handleCheckOut}>
-          Check-out
+        <button
+          className="btn btn-danger"
+          onClick={handleCheckOut}
+          disabled={!canCheckOut || isLoading}
+        >
+          {isLoading ? "Đang xử lý..." : "Check-out"}
         </button>
       </div>
+
+      {/* Thông báo trạng thái */}
+      {lastCheckIn && (
+        <div className="alert alert-info mb-3">
+          {lastCheckIn.checkIn && (
+            <div>
+              Đã check-in lúc: {new Date(lastCheckIn.checkIn).toLocaleString()}
+              {lastCheckIn.status && ` - Trạng thái: ${lastCheckIn.status}`}
+            </div>
+          )}
+          {lastCheckIn.checkOut && (
+            <div>
+              Đã check-out lúc:{" "}
+              {new Date(lastCheckIn.checkOut).toLocaleString()}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Thông báo chung */}
       {message && (
@@ -438,6 +520,46 @@ const TimekeepingForm = () => {
           {message}
         </div>
       )}
+
+      {/* Lịch sử chấm công */}
+      <div className="attendance-history">
+        <h4>Lịch sử chấm công (7 ngày gần nhất)</h4>
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Ngày</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Hình thức</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendanceHistory.map((record) => (
+                <tr key={record.id}>
+                  <td>{new Date(record.checkIn).toLocaleDateString()}</td>
+                  <td>{new Date(record.checkIn).toLocaleTimeString()}</td>
+                  <td>
+                    {record.checkOut
+                      ? new Date(record.checkOut).toLocaleTimeString()
+                      : "Chưa check-out"}
+                  </td>
+                  <td>{record.attendanceType}</td>
+                  <td>{record.status || "---"}</td>
+                </tr>
+              ))}
+              {attendanceHistory.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Canvas ẩn để chụp ảnh */}
       <canvas ref={canvasRef} style={{ display: "none" }} />

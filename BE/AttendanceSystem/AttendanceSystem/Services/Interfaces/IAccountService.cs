@@ -21,6 +21,7 @@ namespace AttendanceSystem.Services.Interfaces
         Task LogoutAsync();
 
         // Đổi mật khẩu khi đã đăng nhập
+ 
         Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
 
         // Gửi email đặt lại mật khẩu (forgot password)
