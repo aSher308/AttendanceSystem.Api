@@ -1,5 +1,6 @@
 ﻿using AttendanceSystem.Data;
 using AttendanceSystem.DTOs;
+using AttendanceSystem.Interfaces;
 using AttendanceSystem.Models;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,16 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
-        public OvertimeRequestService(AppDbContext context, IEmailService emailService)
+        private readonly ISystemNotificationService _notificationService; // Inject thêm
+
+        public OvertimeRequestService(
+            AppDbContext context,
+            IEmailService emailService,
+            ISystemNotificationService notificationService)
         {
             _context = context;
             _emailService = emailService;
+            _notificationService = notificationService;
         }
 
         public async Task<OvertimeRequestResponse> CreateAsync(OvertimeRequestCreateRequest request)
@@ -32,18 +39,30 @@ namespace AttendanceSystem.Services
             await _context.SaveChangesAsync();
 
             var user = await _context.Users.FindAsync(request.UserId);
-            var adminEmails = await _context.UserRoles
+
+            // Lấy danh sách Admin
+            var adminUsers = await _context.UserRoles
                 .Include(ur => ur.Role)
                 .Include(ur => ur.User)
                 .Where(ur => ur.Role.Name == "Admin")
-                .Select(ur => ur.User.Email)
+                .Select(ur => ur.User)
                 .Distinct()
                 .ToListAsync();
 
-            foreach (var email in adminEmails)
+            foreach (var admin in adminUsers)
             {
-                await _emailService.SendEmailAsync(email, "Yêu cầu tăng ca mới",
+                // Email
+                await _emailService.SendEmailAsync(admin.Email, "Yêu cầu tăng ca mới",
                     $"{user.FullName} vừa gửi yêu cầu tăng ca ngày {request.Date:dd/MM/yyyy} từ {request.StartTime} đến {request.EndTime}.\nLý do: {request.Reason}");
+
+                // Notification
+                await _notificationService.CreateNotificationAsync(new CreateSystemNotificationDTO
+                {
+                    Title = "Yêu cầu tăng ca mới",
+                    Content = $"{user.FullName} xin tăng ca ngày {request.Date:dd/MM}",
+                    UserId = admin.Id,
+                    NotificationType = NotificationType.Approval
+                });
             }
 
             return await GetByIdAsync(overtime.Id) ?? throw new Exception("Không lấy được thông tin tăng ca vừa tạo.");
@@ -64,12 +83,22 @@ namespace AttendanceSystem.Services
                 ? $"Yêu cầu tăng ca ngày {overtime.Date:dd/MM/yyyy} từ {overtime.StartTime} đến {overtime.EndTime} đã được duyệt."
                 : $"Yêu cầu tăng ca của bạn đã bị từ chối.";
 
+            // Email
             await _emailService.SendEmailAsync(user.Email, "Kết quả tăng ca", body);
 
+            // Notification
+            await _notificationService.CreateNotificationAsync(new CreateSystemNotificationDTO
+            {
+                Title = "Kết quả duyệt tăng ca",
+                Content = request.Status == RequestStatus.Approved
+                    ? $"Yêu cầu tăng ca ngày {overtime.Date:dd/MM} đã được DUYỆT."
+                    : "Yêu cầu tăng ca của bạn đã bị TỪ CHỐI.",
+                UserId = user.Id,
+                NotificationType = NotificationType.System
+            });
 
             return true;
         }
-
 
         public async Task<bool> DeleteAsync(int id)
         {

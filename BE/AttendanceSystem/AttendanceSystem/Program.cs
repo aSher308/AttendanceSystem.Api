@@ -81,6 +81,10 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedShiftsAsync(dbContext);
     await DataSeeder.SeedLocationsAsync(dbContext);
     await DataSeeder.SeedDepartmentsAsync(dbContext);
+
+    await DataSeeder.SeedEmployeesAsync(dbContext);      // Tạo nhân viên
+    await DataSeeder.SeedWorkSchedulesAsync(dbContext);  // Tạo lịch
+    await DataSeeder.SeedAttendanceAsync(dbContext);     // Tạo chấm công
 }
 
 

@@ -43,7 +43,7 @@ namespace AttendanceSystem.Services
                 ShiftName = ws.Shift.Name,
                 StartTime = ws.Shift.StartTime,
                 EndTime = ws.Shift.EndTime,
-                WorkDate = ws.WorkDate.AddHours(7),
+                WorkDate = ws.WorkDate, 
                 Note = ws.Note,
                 Status = ws.Status
             }).ToListAsync();
@@ -75,7 +75,7 @@ namespace AttendanceSystem.Services
                 ShiftName = shift?.Name ?? "",
                 StartTime = shift?.StartTime ?? TimeSpan.Zero,
                 EndTime = shift?.EndTime ?? TimeSpan.Zero,
-                WorkDate = schedule.WorkDate.AddHours(7),
+                WorkDate = schedule.WorkDate,
                 Note = schedule.Note,
                 Status = schedule.Status
             };
@@ -100,7 +100,6 @@ namespace AttendanceSystem.Services
             var schedule = await _context.WorkSchedules.FindAsync(id);
             if (schedule == null) return false;
 
-            // Kiểm tra xem có attendance nào đã check-in hoặc check-out cho ca làm việc này không
             bool hasAttendance = await _context.Attendances.AnyAsync(a =>
                 a.UserId == schedule.UserId &&
                 a.CheckIn.Date == schedule.WorkDate &&
@@ -109,7 +108,6 @@ namespace AttendanceSystem.Services
 
             if (hasAttendance)
             {
-                // Không cho phép xóa nếu đã có check-in hoặc check-out
                 throw new InvalidOperationException("Không thể xóa lịch làm việc vì đã có bản ghi chấm công.");
             }
 

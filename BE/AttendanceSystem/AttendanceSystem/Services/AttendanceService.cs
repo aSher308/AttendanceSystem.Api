@@ -294,6 +294,5 @@ namespace AttendanceSystem.Services
                 RadiusInMeters = location?.RadiusInMeters
             };
         }
-
     }
 }

@@ -937,7 +937,7 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
-    "Method": "UpdateNotificationStatus",
+    "Method": "UpdateStatus",
     "RelativePath": "api/SystemNotifications/{id}/status",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -1004,18 +1004,12 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
-    "Method": "GetUserNotifications",
+    "Method": "GetMyNotifications",
     "RelativePath": "api/SystemNotifications/me",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[AttendanceSystem.DTOs.SystemNotificationDTO, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -1030,44 +1024,12 @@
   },
   {
     "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
-    "Method": "GetUnreadNotifications",
-    "RelativePath": "api/SystemNotifications/me/unread",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[AttendanceSystem.DTOs.SystemNotificationDTO, AttendanceSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "AttendanceSystem.Controllers.SystemNotificationsController",
-    "Method": "MarkAllAsRead",
-    "RelativePath": "api/SystemNotifications/user/{userId}/mark-all-read",
+    "Method": "MarkMyNotificationsAsRead",
+    "RelativePath": "api/SystemNotifications/me/mark-all-read",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

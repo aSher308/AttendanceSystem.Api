@@ -22,7 +22,7 @@
     {
         Pending,
         Approved,
-        Rejected
+        Rejected    
     }
 
     public enum ScanType

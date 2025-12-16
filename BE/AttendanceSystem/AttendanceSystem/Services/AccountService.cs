@@ -3,10 +3,6 @@ using AttendanceSystem.Models;
 using AttendanceSystem.Services.Interfaces;
 using AttendanceSystem.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Identity;
 using AttendanceSystem.Helpers;
 
 namespace AttendanceSystem.Services
@@ -14,10 +10,12 @@ namespace AttendanceSystem.Services
     public class AccountService : IAccountService
     {
         private readonly AppDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public AccountService(AppDbContext context)
+        public AccountService(AppDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<User?> RegisterAsync(DTOs.RegisterRequest request, string confirmUrl)
@@ -43,7 +41,8 @@ namespace AttendanceSystem.Services
             await _context.SaveChangesAsync();
 
             var link = $"{confirmUrl}?token={user.EmailConfirmationToken}";
-            await SendEmailAsync(user.Email, "Xác nhận email", $"Nhấn vào đây để xác nhận: {link}");
+            // Sửa: Dùng _emailService thay vì hàm private
+            await _emailService.SendEmailAsync(user.Email, "Xác nhận email", $"Nhấn vào đây để xác nhận: {link}");
 
             return user;
         }
@@ -100,7 +99,8 @@ namespace AttendanceSystem.Services
             user.ResetTokenExpiry = VietnamTimeHelper.Now.AddHours(1);
             await _context.SaveChangesAsync();
 
-            await SendEmailAsync(
+            // Sửa: Dùng _emailService
+            await _emailService.SendEmailAsync(
                 user.Email,
                 "Mã đặt lại mật khẩu",
                 $"Mã đặt lại mật khẩu của bạn là:\n\n{user.PasswordResetToken}\n\nMã này sẽ hết hạn sau 1 giờ."
@@ -110,29 +110,17 @@ namespace AttendanceSystem.Services
 
         public async Task<bool> ResetPasswordAsync(string token, string newPassword)
         {
-            Console.WriteLine("🔁 ResetPasswordAsync được gọi");
-            Console.WriteLine("📨 Token nhận được: " + token);
-
             var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.PasswordResetToken == token &&
                 u.ResetTokenExpiry >= VietnamTimeHelper.Now);
 
-            if (user == null)
-            {
-                Console.WriteLine("❌ Không tìm thấy user hợp lệ cho token");
-                return false;
-            }
-
-            Console.WriteLine("✅ Tìm thấy user: " + user.Email);
-            Console.WriteLine("📅 Token hết hạn: " + user.ResetTokenExpiry);
+            if (user == null) return false;
 
             user.PasswordHash = PasswordHasher.Hash(newPassword);
             user.PasswordResetToken = null;
             user.ResetTokenExpiry = null;
 
             await _context.SaveChangesAsync();
-            Console.WriteLine("🔒 Mật khẩu đã được đặt lại thành công");
-
             return true;
         }
 
@@ -141,26 +129,6 @@ namespace AttendanceSystem.Services
             return await _context.UserRoles
                 .Include(ur => ur.Role)
                 .AnyAsync(ur => ur.UserId == userId && ur.Role.Name == "Admin");
-        }
-
-        private async Task SendEmailAsync(string to, string subject, string body)
-        {
-            var from = "manhcuucon@gmail.com";
-            var password = "bwtk pazj cvle yflv";
-
-            var smtp = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential(from, password),
-                EnableSsl = true
-            };
-
-            var mail = new MailMessage(from, to, subject, body)
-            {
-                IsBodyHtml = false
-            };
-
-            await smtp.SendMailAsync(mail);
         }
     }
 }

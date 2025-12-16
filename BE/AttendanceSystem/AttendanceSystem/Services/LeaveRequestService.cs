@@ -1,5 +1,6 @@
 ﻿using AttendanceSystem.Data;
 using AttendanceSystem.DTOs;
+using AttendanceSystem.Interfaces;
 using AttendanceSystem.Models;
 using AttendanceSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,16 @@ namespace AttendanceSystem.Services
     {
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly ISystemNotificationService _notificationService; // Inject thêm
 
-        public LeaveRequestService(AppDbContext context, IEmailService emailService)
+        public LeaveRequestService(
+            AppDbContext context,
+            IEmailService emailService,
+            ISystemNotificationService notificationService)
         {
             _context = context;
             _emailService = emailService;
+            _notificationService = notificationService;
         }
 
         public async Task<LeaveRequestResponse> CreateAsync(LeaveRequestCreateRequest request)
@@ -38,17 +44,30 @@ namespace AttendanceSystem.Services
             await _context.SaveChangesAsync();
 
             var user = await _context.Users.FindAsync(request.UserId);
-            var adminEmails = await _context.UserRoles
+
+            // Lấy danh sách Admin để gửi thông báo
+            var adminUsers = await _context.UserRoles
                 .Include(ur => ur.Role)
                 .Include(ur => ur.User)
                 .Where(ur => ur.Role.Name == "Admin")
-                .Select(ur => ur.User.Email)
+                .Select(ur => ur.User)
                 .Distinct()
                 .ToListAsync();
 
-            foreach (var email in adminEmails)
+            foreach (var admin in adminUsers)
             {
-                await _emailService.SendEmailAsync(email, "Đơn nghỉ mới", $"{user.FullName} vừa tạo đơn nghỉ từ {request.FromDate:dd/MM/yyyy} đến {request.ToDate:dd/MM/yyyy}. Lý do: {request.Reason}");
+                // Gửi Email
+                await _emailService.SendEmailAsync(admin.Email, "Đơn nghỉ mới",
+                    $"{user.FullName} vừa tạo đơn nghỉ từ {request.FromDate:dd/MM/yyyy} đến {request.ToDate:dd/MM/yyyy}. Lý do: {request.Reason}");
+
+                // Tạo thông báo trên App cho Admin
+                await _notificationService.CreateNotificationAsync(new CreateSystemNotificationDTO
+                {
+                    Title = "Yêu cầu nghỉ phép mới",
+                    Content = $"{user.FullName} xin nghỉ {request.LeaveType} từ {request.FromDate:dd/MM}",
+                    UserId = admin.Id,
+                    NotificationType = NotificationType.Approval
+                });
             }
 
             return await GetByIdAsync(leave.Id) ?? throw new Exception("Không lấy được thông tin đơn nghỉ vừa tạo.");
@@ -79,34 +98,19 @@ namespace AttendanceSystem.Services
         }
 
         public async Task<List<LeaveRequestResponse>> GetAllAsync(
-    int? userId, DateTime? from, DateTime? to, string? status)
+            int? userId, DateTime? from, DateTime? to, string? status)
         {
             var query = _context.LeaveRequests.Include(l => l.User).AsQueryable();
 
-            if (userId.HasValue)
-            {
-                query = query.Where(l => l.UserId == userId.Value);
-            }
-
-            if (from.HasValue)
-            {
-                query = query.Where(l => l.FromDate >= from.Value);
-            }
-
-            if (to.HasValue)
-            {
-                query = query.Where(l => l.ToDate <= to.Value);
-            }
-
+            if (userId.HasValue) query = query.Where(l => l.UserId == userId.Value);
+            if (from.HasValue) query = query.Where(l => l.FromDate >= from.Value);
+            if (to.HasValue) query = query.Where(l => l.ToDate <= to.Value);
             if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, out var parsedStatus))
-            {
                 query = query.Where(l => l.Status == parsedStatus);
-            }
 
             var list = await query.ToListAsync();
             return list.Select(MapToResponse).ToList();
         }
-
 
         public async Task<LeaveRequestResponse?> GetByIdAsync(int id)
         {
@@ -153,15 +157,25 @@ namespace AttendanceSystem.Services
                 : $"Đơn nghỉ của bạn đã bị từ chối. Ghi chú: {request.ReviewerComment}";
 
             await _emailService.SendEmailAsync(user.Email, "Kết quả đơn nghỉ phép", body);
+
+            // Gửi thông báo cho Nhân viên biết kết quả
+            await _notificationService.CreateNotificationAsync(new CreateSystemNotificationDTO
+            {
+                Title = "Kết quả duyệt đơn nghỉ phép",
+                Content = request.Status == RequestStatus.Approved
+                    ? "Đơn xin nghỉ của bạn đã được DUYỆT."
+                    : $"Đơn xin nghỉ của bạn đã bị TỪ CHỐI. Lý do: {request.ReviewerComment}",
+                UserId = user.Id,
+                NotificationType = NotificationType.System
+            });
+
             return true;
         }
-
 
         public async Task<bool> CheckLeaveBalanceEnoughAsync(int userId, DateTime from, DateTime to)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return false;
-
             int totalLeaveDays = (to - from).Days + 1;
             return user.LeaveBalance >= totalLeaveDays;
         }

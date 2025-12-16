@@ -21,24 +21,81 @@ namespace AttendanceSystem.Services
 
         public async Task<SystemNotificationDTO> CreateNotificationAsync(CreateSystemNotificationDTO notificationDto)
         {
-            var notification = new SystemNotification
+            // Case 1: Gửi thông báo cho 1 người cụ thể
+            if (notificationDto.UserId.HasValue)
             {
-                Title = notificationDto.Title,
-                Content = notificationDto.Content,
-                UserId = notificationDto.UserId,
-                NotificationType = notificationDto.NotificationType,
-                CreatedAt = VietnamTimeHelper.Now,
-                IsRead = false
-            };
+                var notification = new SystemNotification
+                {
+                    Title = notificationDto.Title,
+                    Content = notificationDto.Content,
+                    UserId = notificationDto.UserId,
+                    NotificationType = notificationDto.NotificationType,
+                    CreatedAt = VietnamTimeHelper.Now,
+                    IsRead = false
+                };
 
-            _context.SystemNotifications.Add(notification);
-            await _context.SaveChangesAsync();
+                _context.SystemNotifications.Add(notification);
+                await _context.SaveChangesAsync();
 
-            return await GetNotificationByIdAsync(notification.Id);
+                return await GetNotificationByIdAsync(notification.Id);
+            }
+            // Case 2: Gửi cho TOÀN BỘ User (UserId là null)
+            else
+            {
+                // 1. Lấy danh sách ID của tất cả User đang hoạt động (IsActive = true)
+                var activeUserIds = await _context.Users
+                    .Where(u => u.IsActive)
+                    .Select(u => u.Id)
+                    .ToListAsync();
+
+                if (!activeUserIds.Any())
+                {
+                    // Nếu không có user nào thì return dummy để không lỗi
+                    return new SystemNotificationDTO
+                    {
+                        Title = notificationDto.Title,
+                        Content = "Không có user nào để gửi"
+                    };
+                }
+
+                // 2. Tạo danh sách thông báo để Insert 1 lần (Bulk Insert)
+                var notificationsToInsert = new List<SystemNotification>();
+                var now = VietnamTimeHelper.Now;
+
+                foreach (var userId in activeUserIds)
+                {
+                    notificationsToInsert.Add(new SystemNotification
+                    {
+                        Title = notificationDto.Title,
+                        Content = notificationDto.Content,
+                        UserId = userId, // Gán cụ thể cho từng User
+                        NotificationType = notificationDto.NotificationType,
+                        CreatedAt = now,
+                        IsRead = false
+                    });
+                }
+
+                _context.SystemNotifications.AddRange(notificationsToInsert);
+                await _context.SaveChangesAsync();
+
+                // Trả về DTO đại diện (vì tạo nhiều bản ghi nên không trả về 1 ID cụ thể được)
+                return new SystemNotificationDTO
+                {
+                    Id = 0,
+                    Title = notificationDto.Title,
+                    Content = notificationDto.Content,
+                    CreatedAt = now,
+                    UserId = null,
+                    UserName = "All Users",
+                    IsRead = false,
+                    NotificationType = notificationDto.NotificationType
+                };
+            }
         }
 
         public async Task<IEnumerable<SystemNotificationDTO>> GetUserNotificationsAsync(int userId)
         {
+            // Lấy thông báo của user VÀ cả những thông báo chung (UserId = null - nếu có dữ liệu cũ)
             return await _context.SystemNotifications
                 .Where(n => n.UserId == userId || n.UserId == null)
                 .OrderByDescending(n => n.CreatedAt)
@@ -87,15 +144,17 @@ namespace AttendanceSystem.Services
         public async Task MarkAllAsReadAsync(int userId)
         {
             var unreadNotifications = await _context.SystemNotifications
-                .Where(n => (n.UserId == userId || n.UserId == null) && !n.IsRead)
+                .Where(n => (n.UserId == userId) && !n.IsRead)
                 .ToListAsync();
 
-            foreach (var notification in unreadNotifications)
+            if (unreadNotifications.Any())
             {
-                notification.IsRead = true;
+                foreach (var notification in unreadNotifications)
+                {
+                    notification.IsRead = true;
+                }
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<SystemNotificationDTO>> FilterNotificationsAsync(NotificationFilterDTO filter)
@@ -134,7 +193,7 @@ namespace AttendanceSystem.Services
                 Content = notification.Content,
                 CreatedAt = notification.CreatedAt,
                 UserId = notification.UserId,
-                UserName = notification.User?.FullName,
+                UserName = notification.User?.FullName ?? "System/All",
                 IsRead = notification.IsRead,
                 NotificationType = notification.NotificationType
             };
